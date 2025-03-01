@@ -13,27 +13,33 @@ const createUser = async (data: IUser) => {
 const getSpecificUser = async (id: string): Promise<IUser> => {
   return await User.findOne({ _id: id })
     .populate({
-      path: 'profile',
+      path: 'survey',
       select: '',
     })
-    .select('-password');
+    .select('-password -verification');
 };
 
 // service for get specific user
-const getAllUser = async (): Promise<IUser[]> => {
-  return await User.find()
+const getAllUser = async (query: string): Promise<IUser[]> => {
+  const matchCondition: any = {};
+
+  if (query) {
+    matchCondition.$text = { $search: query }; // Add search criteria if provided
+  }
+
+  return await User.find(matchCondition)
     .populate({
-      path: 'profile',
+      path: 'survey',
       select: '',
     })
-    .select('-password');
+    .select('-password -verification');
 };
 
 // service for get specific user
 const getSpecificUserByEmail = async (email: string): Promise<IUser> => {
   return await User.findOne({ email })
     .populate({
-      path: 'profile',
+      path: 'survey',
       select: '',
     })
     .select('-password');
@@ -47,12 +53,12 @@ const updateSpecificUser = async (id: string, data: Partial<IUser>) => {
 // service for delete specific user
 const deleteSpecificUser = async (id: string, role: string) => {
   await User.deleteOne({ _id: id });
-  if(role === 'patient'){
-    await PatientProfile.deleteOne({ user : id });
-  }else if(role === 'therapist') {
-    await TherapistProfile.deleteOne({ user : id });
-  }else{
-    return false
+  if (role === 'patient') {
+    await PatientProfile.deleteOne({ user: id });
+  } else if (role === 'therapist') {
+    await TherapistProfile.deleteOne({ user: id });
+  } else {
+    return false;
   }
   return true;
 };

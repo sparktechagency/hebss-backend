@@ -21,7 +21,10 @@ interface IUser extends Document {
   role: string;
   isSocial?: boolean;
   fcmToken?: string;
-  profile: Types.ObjectId
+  survey: Types.ObjectId;
+  gender: Gender;
+  referralCode?: string;
+  point?: number;
 
   // method declarations
   comparePassword(userPlanePassword: string): boolean

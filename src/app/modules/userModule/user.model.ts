@@ -3,6 +3,12 @@ import IUser from './user.interface';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 
+enum Gender {
+  Male = 'male',
+  Female = 'female',
+  Other = 'other',
+}
+
 const userSchema = new mongoose.Schema<IUser>(
   {
     firstName: String,
@@ -14,8 +20,8 @@ const userSchema = new mongoose.Schema<IUser>(
       lowercase: true,
       trim: true,
       validate: {
-        validator: (value) => validator.isEmail(value),
-        message: (props) => `${props.value} is not a valid email!`,
+        validator: (value: string) => validator.isEmail(value),
+        message: (props: { value: string }) => `${props.value} is not a valid email!`,
       },
     },
     phone: {
@@ -35,11 +41,8 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     role: {
       type: String,
-      enum: {
-        values: ['patient', 'therapist'],
-        message: '{VALUE} is not accepted as a role value. Use patient/therapist.',
-      },
-      required: true,
+      enum: ['user'],
+      default: 'user',
     },
     status: {
       type: String,
@@ -67,10 +70,23 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       default: null,
     },
-    profile: {
+    survey: {
       type: mongoose.Schema.Types.ObjectId,
-      refPath: 'role'
-    }
+      ref: 'survey',
+    },
+    gender: {
+      type: String,
+      enum: Object.values(Gender),
+      default: Gender.Male,
+    },
+    // referralCode: {
+    //   type: String,
+    //   default: null,
+    // },
+    point: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
@@ -98,7 +114,12 @@ userSchema.methods.compareVerificationCode = function (userPlaneCode: string) {
   return bcrypt.compareSync(userPlaneCode, this.verification.code);
 };
 
-
+userSchema.index({
+  firstName: 'text',
+  lastName: 'text',
+  email: 'text',
+  phone: 'text',
+})
 
 const User = mongoose.model<IUser>('user', userSchema);
 export default User;
