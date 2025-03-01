@@ -50,7 +50,7 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     const mailOptions = {
       from: config.gmail_app_user as string,
       to: userData.email,
-      subject: 'Counta - Email Verification',
+      subject: 'Illuminate Muslim Minds - Email Verification',
       text: content,
     };
 

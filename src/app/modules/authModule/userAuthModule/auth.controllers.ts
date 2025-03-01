@@ -96,7 +96,7 @@ const resendEmailVerificationCode = asyncHandler(async (req: Request, res: Respo
   const mailOptions = {
     from: config.gmail_app_user as string,
     to: email,
-    subject: 'Email Verification',
+    subject: 'Illuminate Muslim Minds - Email Verification',
     text: content,
   };
 
