@@ -124,20 +124,20 @@ const getAllUser = asyncHandler(async (req: Request, res: Response) => {
 });
 
 // controller for delete specific user
-const deleteSpecificUser = asyncHandler(async (req: Request, res: Response) => {
-  const { id } = req.params;
-  const { role } = req.user!;
-  const isDelete = await userServices.deleteSpecificUser(id, role);
-  if (!isDelete) {
-    throw new CustomError.BadRequestError('Failed to delete user!');
-  }
+// const deleteSpecificUser = asyncHandler(async (req: Request, res: Response) => {
+//   const { id } = req.params;
+//   const { role } = req.user!;
+//   const isDelete = await userServices.deleteSpecificUser(id, role);
+//   if (!isDelete) {
+//     throw new CustomError.BadRequestError('Failed to delete user!');
+//   }
 
-  sendResponse(res, {
-    statusCode: StatusCodes.OK,
-    status: 'success',
-    message: 'User delete successfull',
-  });
-});
+//   sendResponse(res, {
+//     statusCode: StatusCodes.OK,
+//     status: 'success',
+//     message: 'User delete successfull',
+//   });
+// });
 
 // controller for update specific user
 const updateSpecificUser = asyncHandler(async (req: Request, res: Response) => {
@@ -165,7 +165,7 @@ export default {
   createUser,
   getSpecificUser,
   getAllUser,
-  deleteSpecificUser,
+  // deleteSpecificUser,
   updateSpecificUser,
   // changeUserProfileImage,
 };

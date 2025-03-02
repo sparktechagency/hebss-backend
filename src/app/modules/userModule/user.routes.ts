@@ -18,12 +18,12 @@ userRouter.patch(
   userControllers.updateSpecificUser,
 );
 
-userRouter.delete(
-  '/delete/:id',
-  //   authentication('user', 'admin'),
-  requestValidator(UserValidationZodSchema.getSpecificUserZodSchema),
-  userControllers.deleteSpecificUser,
-);
+// userRouter.delete(
+//   '/delete/:id',
+//   //   authentication('user', 'admin'),
+//   requestValidator(UserValidationZodSchema.getSpecificUserZodSchema),
+//   userControllers.deleteSpecificUser,
+// );
 // userRouter.patch('/update/profile-picture/:id', authentication('patient', 'therapist'), requestValidator(UserValidationZodSchema.getSpecificUserZodSchema), userControllers.changeUserProfileImage)
 
 export default userRouter;
