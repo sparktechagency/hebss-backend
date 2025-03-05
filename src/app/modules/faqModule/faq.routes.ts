@@ -8,7 +8,7 @@ const faqRouter = express.Router();
 faqRouter.post('/create', authorization('super-admin', 'admin'), faqControllers.createNewFaq);
 
 // Route to retrieve faq (accessible to everyone)
-faqRouter.get('/retrive', faqControllers.getAllFaq);
+faqRouter.get('/retrieve', faqControllers.getAllFaq);
 
 // Route to delete specific faq (only accessible to admin or super-admin)
 faqRouter.delete('/delete/:id', authorization('super-admin', 'admin'), faqControllers.deleteSpecificFaq);

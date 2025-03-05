@@ -47,8 +47,7 @@ const updateSpecificFaq = asyncHandler(async (req: Request, res: Response) => {
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     status: 'success',
-    message: 'Faq updated successfully',
-    data: updatedFaq,
+    message: 'Faq updated successfully'
   });
 });
 
