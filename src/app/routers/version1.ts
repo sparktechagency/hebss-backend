@@ -8,6 +8,8 @@ import privacyPolicyRouter from '../modules/privacyPolicyModule/privacyPolicy.ro
 import termsConditionRouter from '../modules/termsConditionModule/termsCondition.routes';
 import contactUsRouter from '../modules/contactUsModule/contactUs.routes';
 import faqRouter from '../modules/faqModule/faq.routes';
+import teamRouter from '../modules/teamModule/team.routes';
+import blogRouter from '../modules/blogModule/blog.routes';
 
 const routersVersionOne = express.Router();
 
@@ -18,6 +20,10 @@ routersVersionOne.use('/admin', adminRouter);
 // auth
 routersVersionOne.use('/user/auth', userAuthRouter);
 routersVersionOne.use('/admin/auth', adminAuthRouter);
+
+// app
+routersVersionOne.use('/team', teamRouter);
+routersVersionOne.use('/blog', blogRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
