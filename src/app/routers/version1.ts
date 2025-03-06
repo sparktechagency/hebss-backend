@@ -10,6 +10,9 @@ import contactUsRouter from '../modules/contactUsModule/contactUs.routes';
 import faqRouter from '../modules/faqModule/faq.routes';
 import teamRouter from '../modules/teamModule/team.routes';
 import blogRouter from '../modules/blogModule/blog.routes';
+import categoryRouter from '../modules/categoryModule/category.routes';
+import gradeRouter from '../modules/gradeModule/grade.routes';
+import collectionRouter from '../modules/collectionModule/collection.routes';
 
 const routersVersionOne = express.Router();
 
@@ -24,6 +27,9 @@ routersVersionOne.use('/admin/auth', adminAuthRouter);
 // app
 routersVersionOne.use('/team', teamRouter);
 routersVersionOne.use('/blog', blogRouter);
+routersVersionOne.use('/category', categoryRouter);
+routersVersionOne.use('/grade', gradeRouter);
+routersVersionOne.use('/collection', collectionRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
