@@ -3,7 +3,7 @@ import { Document, Types } from 'mongoose';
 export interface IBook extends Document {
   category: Types.ObjectId;
   grade: Types.ObjectId;
-  collection: Types.ObjectId;
+  bookCollection: Types.ObjectId;
   name: string;
   author: string;
   description: string;
@@ -13,6 +13,10 @@ export interface IBook extends Document {
   };
   format: string;
   status: string;
-  language: string;
+  bookLanguage: string;
   level: string;
+  coverImage: string;
+  quantity: number;
+  isArabic: boolean;
+  weight: number;
 }

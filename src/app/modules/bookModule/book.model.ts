@@ -4,7 +4,7 @@ import { IBook } from './book.interface';
 const bookSchema = new Schema<IBook>({
   category: { type: mongoose.Schema.Types.ObjectId, ref: 'category' },
   grade: { type: mongoose.Schema.Types.ObjectId, ref: 'grade' },
-  collection: { type: mongoose.Schema.Types.ObjectId, ref: 'collection' },
+  bookCollection: { type: mongoose.Schema.Types.ObjectId, ref: 'bookCollection' },
   name: { type: String, required: true },
   author: { type: String, required: true },
   description: { type: String, required: true },
@@ -12,12 +12,40 @@ const bookSchema = new Schema<IBook>({
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
   },
-  format: { type: String, required: true },
-  status: { type: String, required: true },
-  language: { type: String, required: true },
-  level: { type: String, required: true },
+  format: {
+    type: String,
+    enum: ['paper', 'ebook'],
+    default: 'paper',
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+  status: {
+    type: String,
+    enum: ['instock', 'outofstock'],
+    default: 'instock',
+  },
+  isArabic: {
+    type: Boolean,
+    default: false,
+  },
+  bookLanguage: {
+    type: String,
+    enum: ['english', 'arabic'],
+    required: true,
+  },
+  level: {
+    type: String,
+    enum: ['beginner', 'intermediate', 'advanced'],
+    required: true,
+  },
+  coverImage: { type: String, required: true },
+  weight: { type: Number, required: true },
 });
 
-const Book = model<IBook>('Book', bookSchema);
+bookSchema.index({ name: 'text', author: 'text', description: 'text'});
+
+const Book = model<IBook>('book', bookSchema);
 
 export default Book;

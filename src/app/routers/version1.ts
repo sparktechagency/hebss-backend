@@ -13,6 +13,7 @@ import blogRouter from '../modules/blogModule/blog.routes';
 import categoryRouter from '../modules/categoryModule/category.routes';
 import gradeRouter from '../modules/gradeModule/grade.routes';
 import collectionRouter from '../modules/collectionModule/collection.routes';
+import bookRouter from '../modules/bookModule/book.routes';
 
 const routersVersionOne = express.Router();
 
@@ -30,6 +31,7 @@ routersVersionOne.use('/blog', blogRouter);
 routersVersionOne.use('/category', categoryRouter);
 routersVersionOne.use('/grade', gradeRouter);
 routersVersionOne.use('/collection', collectionRouter);
+routersVersionOne.use('/book', bookRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);

@@ -12,5 +12,5 @@ const collectionSchema = new mongoose.Schema(
   },
 );
 
-const Collection = mongoose.model('collection', collectionSchema);
+const Collection = mongoose.model('bookCollection', collectionSchema);
 export default Collection;
