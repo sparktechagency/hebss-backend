@@ -7,7 +7,7 @@ class BookService {
     return await book.save();
   }
 
-  async getBooks(searchTerm: string, category: string, skip: number, limit: number) {
+  async getBooks(searchTerm: string, category: string, skip: number, limit: number, sortBy: string, sortOrder: string) {
     let query: any = {};
     if (category) {
       query.category = category;
@@ -15,7 +15,17 @@ class BookService {
     if (searchTerm) {
       query.$text = { $search: searchTerm };
     }
-    return await Book.find(query).skip(skip).limit(limit).populate([
+
+    const sortOptions: any = {};
+    if(sortBy){
+      if(sortBy === 'name'){
+        sortOptions.name = sortOrder === 'asc' ? 1 : -1;
+      }else if(sortBy === 'price'){
+        sortOptions['price.amount'] = sortOrder === 'asc' ? 1 : -1;
+      }
+    }
+
+    return await Book.find(query).skip(skip).limit(limit).sort(sortOptions).populate([
         {
             path: 'category',
             select: 'title ageGroup'

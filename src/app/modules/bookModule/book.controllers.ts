@@ -65,12 +65,14 @@ class BookController {
   });
 
   getBooks = asyncHandler(async (req: Request, res: Response) => {
-    const {search, category} = req.query;
+    const { search, category, sortBy, sortOrder } = req.query;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 8;
 
+    const order = sortOrder === 'desc' ? 'desc' : 'asc';
+
     const skip = (page - 1) * limit;
-    const books = await BookServices.getBooks(search as unknown as string, category as unknown as string, skip, limit);
+    const books = await BookServices.getBooks(search as unknown as string, category as unknown as string, skip, limit, sortBy as unknown as string, order);
 
     const totalBooks = await BookServices.countBooks();
     const totalPages = Math.ceil(totalBooks / limit);

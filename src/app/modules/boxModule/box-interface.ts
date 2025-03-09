@@ -10,4 +10,5 @@ export interface IBox extends Document {
     amount: number;
     currency: string;
   };
+  _id: Types.ObjectId
 }

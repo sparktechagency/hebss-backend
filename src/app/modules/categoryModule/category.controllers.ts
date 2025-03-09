@@ -4,6 +4,7 @@ import CategoryServices from './category.services';
 import CustomError from '../../errors';
 import sendResponse from '../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
+import BoxServices from '../boxModule/box-services';
 
 class CategoryController {
   createCategory = asyncHandler(async (req: Request, res: Response) => {
@@ -51,6 +52,15 @@ class CategoryController {
   updateCategory = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const categoryData = req.body;
+
+    if (categoryData.title) {
+      const box: any = await BoxServices.getBoxesByCategoryId(id);
+      if (box) {
+        box.title = categoryData.title;
+        await box.save();
+      }
+    }
+
     const updatedCategory = await CategoryServices.updateCategory(id, categoryData);
 
     if (!updatedCategory) {
