@@ -12,6 +12,16 @@ const bookSchema = new Schema<IBook>({
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
   },
+  isDiscount: { type: Boolean, default: false },
+  discountPrice: {
+    type: {
+      type: String,
+      enum: ['percentage', 'fixed'],
+      default: 'percentage',
+    },
+    amount: { type: Number, required: true },
+    currency: { type: String, required: true },
+  },
   format: {
     type: String,
     enum: ['paper', 'ebook'],
@@ -42,9 +52,10 @@ const bookSchema = new Schema<IBook>({
   },
   coverImage: { type: String, required: true },
   weight: { type: Number, required: true },
+  summary: { type: String, required: true },
 });
 
-bookSchema.index({ name: 'text', author: 'text', description: 'text'});
+bookSchema.index({ name: 'text', author: 'text', description: 'text' });
 
 const Book = model<IBook>('book', bookSchema);
 

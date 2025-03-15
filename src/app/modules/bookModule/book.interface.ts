@@ -11,6 +11,12 @@ export interface IBook extends Document {
     amount: number;
     currency: string;
   };
+  isDiscount: boolean;
+  discountPrice: {
+    type: string;
+    amount: number;
+    currency: string;
+  };
   format: string;
   status: string;
   bookLanguage: string;
@@ -19,4 +25,5 @@ export interface IBook extends Document {
   quantity: number;
   isArabic: boolean;
   weight: number;
+  summary: string;
 }

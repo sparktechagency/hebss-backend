@@ -27,6 +27,25 @@ class BookController {
         };
       }
 
+      // Discount Price: If discountPriceAmount is provided, set discount price
+      const isDiscount = bookData.isDiscount === 'true';
+      if (isDiscount) {
+        if (bookData.discountAmount) {
+          bookData.discountPrice = {
+            type: bookData.discountType,
+            amount: Number(bookData.discountAmount),
+            currency: CURRENCY_ENUM.USD,
+          };
+        } else {
+          throw new CustomError.BadRequestError('Discount type and discount amount is required while isDiscount is true');
+        }
+      }
+
+      // Quantity: If quantity is provided, ensure it's a number
+      if (bookData.quantity) {
+        bookData.quantity = Number(bookData.quantity);
+      }
+
       // Quantity: If quantity is provided, ensure it's a number
       if (bookData.quantity) {
         bookData.quantity = Number(bookData.quantity);
@@ -72,7 +91,14 @@ class BookController {
     const order = sortOrder === 'desc' ? 'desc' : 'asc';
 
     const skip = (page - 1) * limit;
-    const books = await BookServices.getBooks(search as unknown as string, category as unknown as string, skip, limit, sortBy as unknown as string, order);
+    const books = await BookServices.getBooks(
+      search as unknown as string,
+      category as unknown as string,
+      skip,
+      limit,
+      sortBy as unknown as string,
+      order,
+    );
 
     const totalBooks = await BookServices.countBooks();
     const totalPages = Math.ceil(totalBooks / limit);
@@ -132,6 +158,19 @@ class BookController {
         };
       }
 
+      // Discount Price: If discountPriceAmount is provided, set discount price
+      if (bookData.isDiscount) {
+        if (bookData.discountAmount) {
+          bookData.discountPrice = {
+            type: bookData.discountType,
+            amount: Number(bookData.discountAmount),
+            currency: CURRENCY_ENUM.USD,
+          };
+        } else {
+          throw new CustomError.BadRequestError('Discount type and discount amount is required while isDiscount is true');
+        }
+      }
+
       // Quantity: If quantity is provided, ensure it's a number
       if (bookData.quantity) {
         bookData.quantity = book.quantity + Number(bookData.quantity);
@@ -168,17 +207,18 @@ class BookController {
     });
   });
 
-  deleteAllBooks = asyncHandler(async (req: Request, res: Response) => {
-    const deletedBooks = await BookServices.deleteAllBooks();
+  deleteBook = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const deletedBook = await BookServices.deleteBook(id);
 
-    if (!deletedBooks?.deletedCount) {
-      throw new CustomError.BadRequestError('Failed to delete books!');
+    if (!deletedBook) {
+      throw new CustomError.BadRequestError('Failed to delete book!');
     }
 
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       status: 'success',
-      message: 'All books deleted successfully',
+      message: 'Book deleted successfully',
     });
   });
 }

@@ -49,8 +49,8 @@ class BookService {
     return await Book.findByIdAndUpdate(id, bookData, { new: true });
   }
 
-  async deleteAllBooks() {
-    return await Book.deleteMany({});
+  async deleteBook(id: string) {
+    return await Book.findByIdAndDelete(id);
   }
 
   async countBooks() {
