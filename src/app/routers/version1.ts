@@ -16,6 +16,7 @@ import collectionRouter from '../modules/collectionModule/collection.routes';
 import bookRouter from '../modules/bookModule/book.routes';
 import boxRouter from '../modules/boxModule/box.routes';
 import orderRouter from '../modules/orderModule/order.routes';
+import subscriptionRouter from '../modules/subscriptionModule/subscription.routes';
 
 const routersVersionOne = express.Router();
 
@@ -36,6 +37,7 @@ routersVersionOne.use('/collection', collectionRouter);
 routersVersionOne.use('/book', bookRouter);
 routersVersionOne.use('/box', boxRouter);
 routersVersionOne.use('/order', orderRouter);
+routersVersionOne.use('/subscription', subscriptionRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
