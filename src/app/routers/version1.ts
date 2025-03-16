@@ -15,6 +15,7 @@ import gradeRouter from '../modules/gradeModule/grade.routes';
 import collectionRouter from '../modules/collectionModule/collection.routes';
 import bookRouter from '../modules/bookModule/book.routes';
 import boxRouter from '../modules/boxModule/box.routes';
+import orderRouter from '../modules/orderModule/order.routes';
 
 const routersVersionOne = express.Router();
 
@@ -34,6 +35,7 @@ routersVersionOne.use('/grade', gradeRouter);
 routersVersionOne.use('/collection', collectionRouter);
 routersVersionOne.use('/book', bookRouter);
 routersVersionOne.use('/box', boxRouter);
+routersVersionOne.use('/order', orderRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
