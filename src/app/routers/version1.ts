@@ -17,6 +17,7 @@ import bookRouter from '../modules/bookModule/book.routes';
 import boxRouter from '../modules/boxModule/box.routes';
 import orderRouter from '../modules/orderModule/order.routes';
 import subscriptionRouter from '../modules/subscriptionModule/subscription.routes';
+import subscriptionPurchaseRouter from '../modules/subscriptionPurchaseModule/subscriptionPurchase.routes';
 
 const routersVersionOne = express.Router();
 
@@ -38,6 +39,7 @@ routersVersionOne.use('/book', bookRouter);
 routersVersionOne.use('/box', boxRouter);
 routersVersionOne.use('/order', orderRouter);
 routersVersionOne.use('/subscription', subscriptionRouter);
+routersVersionOne.use('/subscription-purchase', subscriptionPurchaseRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
