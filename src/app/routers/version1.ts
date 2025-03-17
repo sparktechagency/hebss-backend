@@ -18,6 +18,7 @@ import boxRouter from '../modules/boxModule/box.routes';
 import orderRouter from '../modules/orderModule/order.routes';
 import subscriptionRouter from '../modules/subscriptionModule/subscription.routes';
 import subscriptionPurchaseRouter from '../modules/subscriptionPurchaseModule/subscriptionPurchase.routes';
+import invoiceRouter from '../modules/invoiceModule/invoice.routes';
 
 const routersVersionOne = express.Router();
 
@@ -40,6 +41,7 @@ routersVersionOne.use('/box', boxRouter);
 routersVersionOne.use('/order', orderRouter);
 routersVersionOne.use('/subscription', subscriptionRouter);
 routersVersionOne.use('/subscription-purchase', subscriptionPurchaseRouter);
+routersVersionOne.use('/invoice', invoiceRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
