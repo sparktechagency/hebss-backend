@@ -19,6 +19,7 @@ import orderRouter from '../modules/orderModule/order.routes';
 import subscriptionRouter from '../modules/subscriptionModule/subscription.routes';
 import subscriptionPurchaseRouter from '../modules/subscriptionPurchaseModule/subscriptionPurchase.routes';
 import invoiceRouter from '../modules/invoiceModule/invoice.routes';
+import surveyRouter from '../modules/surveyModule/survey.routes';
 
 const routersVersionOne = express.Router();
 
@@ -42,6 +43,7 @@ routersVersionOne.use('/order', orderRouter);
 routersVersionOne.use('/subscription', subscriptionRouter);
 routersVersionOne.use('/subscription-purchase', subscriptionPurchaseRouter);
 routersVersionOne.use('/invoice', invoiceRouter);
+routersVersionOne.use('/survey', surveyRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
