@@ -7,12 +7,18 @@ const surveySchema = new mongoose.Schema<ISurvey>(
     email: String,
     relation: {
       type: String,
-      enum: ['Parent', 'Grandparent', 'Guardian', 'Teacher', 'Friend', 'Other Relative'],
+      enum: {
+        values: ['Parent', 'Grandparent', 'Guardian', 'Teacher', 'Friend', 'Other Relative'],
+        message: '{VALUE} is not accepted as a relation value. Use Parent/Grandparent/Guardian/Teacher/Friend/Other Relative.',
+      },
       required: true,
     },
     gender: {
       type: String,
-      enum: ['Male', 'Female', 'Other'],
+      enum: {
+        values: ['Male', 'Female', 'Other'],
+        message: '{VALUE} is not accepted as a gender value. Use Male/Female/Other.',
+      },
       required: true,
     },
     dateOfBirth: Date,
@@ -24,7 +30,10 @@ const surveySchema = new mongoose.Schema<ISurvey>(
     },
     lavelInArabic: {
       type: String,
-      enum: ['Beginner', 'Intermediate', 'Advanced'],
+      enum: {
+        values: ['Beginner', 'Intermediate', 'Advanced'],
+        message: '{VALUE} is not accepted as a lavel value. Use Beginner/Intermediate/Advanced.',
+      },
       required: true,
     },
     costSpend: {
