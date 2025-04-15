@@ -19,8 +19,9 @@ interface IUser extends Document {
     expireDate: Date;
   };
   role: string;
-  isSocial?: boolean;
-  fcmToken?: string;
+  googleId?: string;
+  facebookId?: string;
+  provider?: 'local' | 'google' | 'facebook';
   survey: Types.ObjectId;
   gender: Gender;
   referralCode?: string;

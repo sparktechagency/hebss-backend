@@ -62,13 +62,18 @@ const userSchema = new mongoose.Schema<IUser>(
         default: null,
       },
     },
-    isSocial: {
-      type: Boolean,
-      default: false,
-    },
-    fcmToken: {
+    googleId: {
       type: String,
       default: null,
+    },
+    facebookId: {
+      type: String,
+      default: null,
+    },
+    provider: {
+      type: String,
+      enum: ['local', 'google', 'facebook'],
+      default: 'local',
     },
     survey: {
       type: mongoose.Schema.Types.ObjectId,

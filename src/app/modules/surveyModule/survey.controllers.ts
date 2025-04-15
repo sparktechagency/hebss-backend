@@ -13,14 +13,18 @@ import { calculateAge } from '../../../utils/calculateAge';
 const createSurvey = asyncHandler(async (req: Request, res: Response) => {
   const surveyData = req.body;
 
-  // check surveyData.dateOfBirth is not bigger than 11 years
+  // Validate required fields
+  if (!surveyData.dateOfBirth || !surveyData.email) {
+    throw new CustomError.BadRequestError('Date of birth and email are required');
+  }
+
+  // Age validation
   const age = calculateAge(surveyData.dateOfBirth);
-  if (age > 11) {
-    throw new CustomError.BadRequestError('Age should be less than 11 years.');
+  if (age > 11 || age < 0) {
+    throw new CustomError.BadRequestError('Age should be between 0 and 11 years.');
   }
 
   const categoryId = await getCategoryByAge(age);
-
   if (!categoryId) {
     throw new CustomError.BadRequestError('No category found for the given age.');
   }
@@ -28,29 +32,41 @@ const createSurvey = asyncHandler(async (req: Request, res: Response) => {
   surveyData.category = categoryId;
 
   if (surveyData.costSpend?.statement) {
-    const parsedCost = parseCostStatement(surveyData.costSpend.statement);
-    surveyData.costSpend.minPrice = parsedCost.minPrice;
-    surveyData.costSpend.maxPrice = parsedCost.maxPrice;
-    surveyData.costSpend.bookRange = parsedCost.bookRange;
+    try {
+      const parsedCost = parseCostStatement(surveyData.costSpend.statement);
+      surveyData.costSpend = { ...surveyData.costSpend, ...parsedCost };
+    } catch (error) {
+      throw new CustomError.BadRequestError('Invalid cost statement format');
+    }
   }
 
   const user: IUser = await userServices.getSpecificUserByEmail(surveyData.email);
-
   if (!user) {
     throw new CustomError.BadRequestError('User not found!');
   }
 
-  const newSurvey = await Survey.create(surveyData);
+  // Use transaction for multiple database operations
+  const session = await Survey.startSession();
+  session.startTransaction();
 
-  user.survey = newSurvey._id as Types.ObjectId;
-  await user.save();
+  try {
+    const newSurvey = await Survey.create([surveyData], { session });
+    user.survey = newSurvey[0]._id as Types.ObjectId;
+    await user.save({ session });
+    await session.commitTransaction();
 
-  sendResponse(res, {
-    statusCode: StatusCodes.CREATED,
-    status: 'success',
-    message: 'Survey created successfully',
-    data: newSurvey,
-  });
+    sendResponse(res, {
+      statusCode: StatusCodes.CREATED,
+      status: 'success',
+      message: 'Survey created successfully',
+      data: newSurvey[0],
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    throw error;
+  } finally {
+    session.endSession();
+  }
 });
 
 export default {

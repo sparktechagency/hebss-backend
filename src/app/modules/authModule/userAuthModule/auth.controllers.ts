@@ -11,6 +11,11 @@ import User from '../../userModule/user.model';
 import CustomError from '../../../errors';
 import asyncHandler from '../../../../shared/asyncHandler';
 
+type UserPayloadType = {
+  email: string;
+  role: string; 
+}
+
 // controller for user/outlet login
 const userLogin = asyncHandler(async (req: Request, res: Response) => {
   const { email, password, isSocial, fcmToken } = req.body;
@@ -313,6 +318,45 @@ const getAccessTokenByRefreshToken = asyncHandler(async (req: Request, res: Resp
   });
 });
 
+const googleCallback = asyncHandler(async (req: Request, res: Response) => {
+  // const token = generateToken(req.user);
+  if (!req.user) {
+    throw new CustomError.BadRequestError('Invalid user info!');
+  }
+  const user = req.user as UserPayloadType
+  // generate token
+  const payload = {
+    email: user.email,
+    role: 'user',
+  };
+
+  const accessToken = jwtHelpers.createToken(
+    payload as typeof payload,
+    config.jwt_access_token_secret as Secret,
+    config.jwt_access_token_expiresin as string,
+  );
+  res.redirect(`${config.frontend_url}/auth/callback?token=${accessToken}`);
+});
+
+const facebookCallback = asyncHandler(async (req: Request, res: Response) => {
+  if (!req.user) {
+    throw new CustomError.BadRequestError('Invalid user info!');
+  }
+  const user = req.user as UserPayloadType
+  // generate token
+  const payload = {
+    email: user.email,
+    role: 'user',
+  };
+
+  const accessToken = jwtHelpers.createToken(
+    payload as typeof payload,
+    config.jwt_access_token_secret as Secret,
+    config.jwt_access_token_expiresin as string,
+  );
+  res.redirect(`${config.frontend_url}/auth/callback?token=${accessToken}`);
+});
+
 export default {
   userLogin,
   resendEmailVerificationCode,
@@ -322,4 +366,6 @@ export default {
   resetPassword,
   changePassword,
   getAccessTokenByRefreshToken,
+  googleCallback,
+  facebookCallback,
 };

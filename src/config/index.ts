@@ -20,6 +20,15 @@ const envSchema = z.object({
 
   GMAIL_APP_USER: z.string().email('Invalid email format'),
   GMAIL_APP_PASSWORD: z.string().min(1, 'Gmail app password is required'),
+
+  GOOGLE_CLIENT_ID: z.string().min(1, 'Google client ID is required'),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, 'Google client secret is required'),
+  
+  FACEBOOK_CLIENT_ID: z.string().min(1, 'Facebook client ID is required'),
+  FACEBOOK_CLIENT_SECRET: z.string().min(1, 'Facebook client secret is required'),
+
+  CALLBACK_URL: z.string().min(1, 'Google callback URL is required'),
+  FRONTEND_URL: z.string().min(1, 'Frontend URL is required'),
 });
 
 const envVars = envSchema.parse(process.env);
@@ -39,4 +48,13 @@ export default {
 
   gmail_app_user: envVars.GMAIL_APP_USER,
   gmail_app_password: envVars.GMAIL_APP_PASSWORD,
+
+  google_client_id: envVars.GOOGLE_CLIENT_ID,
+  google_client_secret: envVars.GOOGLE_CLIENT_SECRET,
+  
+  facebook_client_id: envVars.FACEBOOK_CLIENT_ID,
+  facebook_client_secret: envVars.FACEBOOK_CLIENT_SECRET,
+
+  callback_url: envVars.CALLBACK_URL,
+  frontend_url: envVars.FRONTEND_URL,
 };
