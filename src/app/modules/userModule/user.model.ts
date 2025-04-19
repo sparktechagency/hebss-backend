@@ -11,8 +11,7 @@ enum Gender {
 
 const userSchema = new mongoose.Schema<IUser>(
   {
-    firstName: String,
-    lastName: String,
+    name: String,
     email: {
       type: String,
       unique: true,
@@ -27,7 +26,6 @@ const userSchema = new mongoose.Schema<IUser>(
     phone: {
       type: String,
       unique: true,
-      required: true,
     },
     password: {
       type: String,
@@ -83,14 +81,6 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       enum: Object.values(Gender),
       default: Gender.Male,
-    },
-    // referralCode: {
-    //   type: String,
-    //   default: null,
-    // },
-    point: {
-      type: Number,
-      default: 0,
     },
   },
   {

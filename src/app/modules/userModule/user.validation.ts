@@ -56,15 +56,9 @@ const createUserZodSchema = z.object({
       })
       .optional(),
 
-    isSocial: z.boolean().optional().default(false),
-
-    fcmToken: z.string().nullable().optional(),
-
     survey: z.string().optional(), // Assuming ObjectId will be passed as a string
 
     gender: genderEnum,
-
-    point: z.number().optional().default(0),
   }),
 });
 

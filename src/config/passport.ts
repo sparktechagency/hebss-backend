@@ -44,7 +44,7 @@ passport.use(
     {
       clientID: config.google_client_id,
       clientSecret: config.google_client_secret,
-      callbackURL: config.callback_url,
+      callbackURL: config.google_callback_url,
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -74,7 +74,7 @@ passport.use(
     {
       clientID: config.facebook_client_id,
       clientSecret: config.facebook_client_secret,
-      callbackURL: config.callback_url,
+      callbackURL: config.facebook_redirect_url,
       profileFields: ['id', 'emails', 'name'],
     },
     async (accessToken, refreshToken, profile, done) => {

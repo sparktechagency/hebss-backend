@@ -27,7 +27,8 @@ const envSchema = z.object({
   FACEBOOK_CLIENT_ID: z.string().min(1, 'Facebook client ID is required'),
   FACEBOOK_CLIENT_SECRET: z.string().min(1, 'Facebook client secret is required'),
 
-  CALLBACK_URL: z.string().min(1, 'Google callback URL is required'),
+  GOOGLE_CALLBACK_URL: z.string().min(1, 'Google callback URL is required'),
+  FACEBOOK_REDIRECT_URL: z.string().min(1, 'Facebook redirect URL is required'),
   FRONTEND_URL: z.string().min(1, 'Frontend URL is required'),
 });
 
@@ -55,6 +56,7 @@ export default {
   facebook_client_id: envVars.FACEBOOK_CLIENT_ID,
   facebook_client_secret: envVars.FACEBOOK_CLIENT_SECRET,
 
-  callback_url: envVars.CALLBACK_URL,
+  google_callback_url: envVars.GOOGLE_CALLBACK_URL,
+  facebook_redirect_url: envVars.FACEBOOK_REDIRECT_URL,
   frontend_url: envVars.FRONTEND_URL,
 };

@@ -14,6 +14,8 @@ import { errorHandler, successHandler } from './config/morgan';
 import logger from './config/logger';
 import CustomError from './app/errors';
 import rootDesign from './app/middlewares/rootDesign';
+import passport from './config/passport';
+import session from 'express-session';
 
 const app: Application = express();
 
@@ -38,6 +40,21 @@ const limiter = rateLimit({
   message: 'Too many request found from your IP. Please try again after 15 minutes.',
 });
 // app.use(limiter);
+
+// configure session
+app.use(session({
+  secret: config.jwt_access_token_secret as string,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: config.node_env === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // application middleware
 app.use('/', routers);

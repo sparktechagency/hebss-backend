@@ -57,8 +57,7 @@ const userLogin = asyncHandler(async (req: Request, res: Response) => {
   );
 
   const userInfo = {
-    firstName: user.firstName,
-    lastName: user.lastName,
+    name: user.name,
     email: user.email,
     _id: user._id,
     role: user.role,
@@ -335,6 +334,7 @@ const googleCallback = asyncHandler(async (req: Request, res: Response) => {
     config.jwt_access_token_secret as Secret,
     config.jwt_access_token_expiresin as string,
   );
+
   res.redirect(`${config.frontend_url}/auth/callback?token=${accessToken}`);
 });
 
