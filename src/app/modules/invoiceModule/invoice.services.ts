@@ -22,6 +22,10 @@ class InvoiceService {
   async getInvoiceById(id: string) {
     return await Invoice.findById(id);
   }
+
+  async getLastInvoice() {
+    return await Invoice.findOne().sort({ _id: -1 });
+  }
 }
 
 export default new InvoiceService();

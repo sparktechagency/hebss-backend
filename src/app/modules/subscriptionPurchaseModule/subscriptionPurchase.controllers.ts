@@ -14,6 +14,8 @@ class SubscriptionPurchaseController {
       subscriptionPurchaseData.user.toString(),
     );
 
+    let subscriptionPurchase;
+
     if (existingSubscriptionPurchase) {
       const updatedSubscriptionPurchase = await SubscriptionPurchaseService.updateSubscriptionPurchase(
         existingSubscriptionPurchase._id!.toString(),
@@ -23,9 +25,10 @@ class SubscriptionPurchaseController {
       if (!updatedSubscriptionPurchase?.isModified) {
         throw new CustomError.BadRequestError('Failed to purchase subscription!');
       }
+      // subscriptionPurchase = updatedSubscriptionPurchase;
+    } else {
+      subscriptionPurchase = await SubscriptionPurchaseService.createSubscriptionPurchase(subscriptionPurchaseData);
     }
-
-    const subscriptionPurchase = await SubscriptionPurchaseService.createSubscriptionPurchase(subscriptionPurchaseData);
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,

@@ -4,10 +4,18 @@ import InvoiceServices from './invoice.services';
 import sendResponse from '../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import CustomError from '../../errors';
+import IdGenerator from '../../../utils/IdGenerator';
+import OrderServices from '../orderModule/order.services';
 
 class InvoiceController {
   createInvoice = asyncHandler(async (req: Request, res: Response) => {
     const invoiceData = req.body;
+
+    // find last id for use creating new order id
+    const lastInvoice = await InvoiceServices.getLastInvoice();
+    const lastInvoiceId = lastInvoice ? parseInt(lastInvoice.invoiceId.split('-')[1]) : 0;
+
+    invoiceData.invoiceId = IdGenerator.generateSerialId('INV', lastInvoiceId, 5);
     const invoice = await InvoiceServices.createInvoice(invoiceData);
 
     sendResponse(res, {

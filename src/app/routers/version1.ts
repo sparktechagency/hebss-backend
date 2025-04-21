@@ -21,6 +21,7 @@ import subscriptionPurchaseRouter from '../modules/subscriptionPurchaseModule/su
 import invoiceRouter from '../modules/invoiceModule/invoice.routes';
 import surveyRouter from '../modules/surveyModule/survey.routes';
 import recommendationRouter from '../modules/recommendationModule/recommendation.routes';
+import reviewRouter from '../modules/reviewModule/reviewModule.routes';
 
 const routersVersionOne = express.Router();
 
@@ -46,6 +47,7 @@ routersVersionOne.use('/subscription-purchase', subscriptionPurchaseRouter);
 routersVersionOne.use('/invoice', invoiceRouter);
 routersVersionOne.use('/survey', surveyRouter);
 routersVersionOne.use('/recommendation', recommendationRouter);
+routersVersionOne.use('/review', reviewRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);
