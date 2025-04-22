@@ -8,6 +8,7 @@ const boxSchema = new mongoose.Schema<IBox>({
   image: { type: String, required: true },
   piece: { type: Number, default: 0 },
   books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'book' }],
+  type: { type: String, enum: ['regular', 'gift'], default: 'regular' },
   price: {
     amount: { type: Number, default: 0 },
     currency: { type: String, default: CURRENCY_ENUM.USD },

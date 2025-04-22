@@ -26,4 +26,10 @@ userRouter.patch(
 // );
 // userRouter.patch('/update/profile-picture/:id', authentication('patient', 'therapist'), requestValidator(UserValidationZodSchema.getSpecificUserZodSchema), userControllers.changeUserProfileImage)
 
+// send email to specific user
+userRouter.post('/send-email/indivisual/:id', requestValidator(UserValidationZodSchema.getSpecificUserZodSchema), userControllers.sendEmailToSpecificUser);
+
+// send email to all users
+userRouter.post('/send-email/bulk', userControllers.sendEmailToAllUsers);
+
 export default userRouter;

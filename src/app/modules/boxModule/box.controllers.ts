@@ -16,12 +16,19 @@ class BoxController {
     const boxData = req.body;
     const files = req.files;
 
-    const category = await categoryServices.getCategoryById(boxData.category);
-    if (!category) {
-      throw new CustomError.NotFoundError('Category not found!');
+    const boxes = await BoxServices.getBoxes();
+    if(boxes.length >= 4){
+      throw new CustomError.BadRequestError('Only 4 boxes are allowed!');
     }
 
-    boxData.title = category.title;
+    const category = await categoryServices.getCategoryById(boxData.category);
+    if (!category) {
+      boxData.type = 'gift',
+      boxData.title = 'Gift Box'
+    }else{
+      boxData.title = category.title;
+    }
+
 
     if (boxData.books && boxData.books.length > 0) {
       boxData.piece = boxData.books.length;

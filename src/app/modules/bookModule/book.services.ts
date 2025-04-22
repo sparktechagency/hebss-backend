@@ -7,10 +7,16 @@ class BookService {
     return await book.save();
   }
 
-  async getBooks(searchTerm: string, category: string, skip: number, limit: number, sortBy: string, sortOrder: string) {
+  async getBooks(searchTerm: string, category: string, collection: string, grade: string, skip: number, limit: number, sortBy: string, sortOrder: string) {
     let query: any = {};
     if (category) {
       query.category = category;
+    }
+    if (collection) {
+      query.bookCollection = collection;
+    }
+    if (grade) {
+      query.grade = grade;
     }
     if (searchTerm) {
       query.$text = { $search: searchTerm };

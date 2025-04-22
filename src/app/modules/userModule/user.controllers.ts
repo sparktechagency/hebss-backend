@@ -57,22 +57,6 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     sendMail(mailOptions);
   }
 
-  // create referral code of owner user
-  const generateReferralCode = IdGenerator.generateReferralCode();
-  await referralCodeServices.createReferralCode({
-    user: user._id,
-    code: generateReferralCode,
-  });
-
-  // add point if referral code provide
-  if (userData.referralCode) {
-    const getReferralcode = await referralCodeServices.getReferralCodeByReferralCode(userData.referralCode);
-    if (getReferralcode) {
-      const user = await userServices.getSpecificUser(getReferralcode._id as unknown as string);
-      user.point = +Number(config.referral_point);
-    }
-  }
-
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
     status: 'success',
@@ -161,6 +145,60 @@ const updateSpecificUser = asyncHandler(async (req: Request, res: Response) => {
   });
 });
 
+// controller for send email to specific user
+const sendEmailToSpecificUser = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { emailBody } = req.body;
+
+  const user = await userServices.getSpecificUser(id);
+  if (!user) {
+    throw new CustomError.NotFoundError('User not found!');
+  }
+
+  const mailOptions = {
+    from: config.gmail_app_user as string,
+    to: user.email,
+    subject: emailBody?.subject,
+    text: emailBody?.body,
+  };
+
+  sendMail(mailOptions);
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    status: 'success',
+    message: 'Email sent successfully',
+  });
+});
+
+// controller for send email to all users
+const sendEmailToAllUsers = asyncHandler(async (req: Request, res: Response) => {
+  const { emailBody } = req.body;
+
+  const users = await userServices.getAllUser('');
+  if (!users?.length) {
+    throw new CustomError.NotFoundError('No users exist to send email!');
+  }
+
+  Promise.allSettled(
+    users.map((user) => {
+      const mailOptions = {
+        from: config.gmail_app_user as string,
+        to: user.email,
+        subject: emailBody?.subject,
+        text: emailBody?.body,
+      };
+      return sendMail(mailOptions);
+    })
+  );
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    status: 'success',
+    message: 'Email sent successfully',
+  });
+});
+
 export default {
   createUser,
   getSpecificUser,
@@ -168,4 +206,6 @@ export default {
   // deleteSpecificUser,
   updateSpecificUser,
   // changeUserProfileImage,
+  sendEmailToSpecificUser,
+  sendEmailToAllUsers,
 };

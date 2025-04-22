@@ -8,6 +8,7 @@ export interface ISubscriptionPurchase extends Document {
   };
   paymentType: string;
   paymentStatus: string;
+  isActive: boolean;
   paymentSource: {
     number: string;
     tnxId: string;

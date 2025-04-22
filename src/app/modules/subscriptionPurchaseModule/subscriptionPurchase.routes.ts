@@ -11,5 +11,7 @@ subscriptionPurchaseRouter.post('/create', SubscriptionPurchaseController.create
 subscriptionPurchaseRouter.get('/retrieve/:id', SubscriptionPurchaseController.getSubscriptionPurchaseById);
 subscriptionPurchaseRouter.get('/retrieve/user/:id', SubscriptionPurchaseController.getSubscriptionPurchaseByUserId);
 subscriptionPurchaseRouter.get('/all/retrieve', SubscriptionPurchaseController.getSubscriptionPurchasesBySubscriptionType);
+subscriptionPurchaseRouter.post('/send-subscription-disable-request/:id', SubscriptionPurchaseController.sendSubscriptionDisableRequest);
+subscriptionPurchaseRouter.patch('/disable/subscription/:id', SubscriptionPurchaseController.disableSubscription);
 
 export default subscriptionPurchaseRouter;

@@ -22,6 +22,7 @@ import invoiceRouter from '../modules/invoiceModule/invoice.routes';
 import surveyRouter from '../modules/surveyModule/survey.routes';
 import recommendationRouter from '../modules/recommendationModule/recommendation.routes';
 import reviewRouter from '../modules/reviewModule/reviewModule.routes';
+import favoriteBookRouter from '../modules/favoriteBookModule/favoriteBook.routes';
 
 const routersVersionOne = express.Router();
 
@@ -48,6 +49,7 @@ routersVersionOne.use('/invoice', invoiceRouter);
 routersVersionOne.use('/survey', surveyRouter);
 routersVersionOne.use('/recommendation', recommendationRouter);
 routersVersionOne.use('/review', reviewRouter);
+routersVersionOne.use('/favorite-book', favoriteBookRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);

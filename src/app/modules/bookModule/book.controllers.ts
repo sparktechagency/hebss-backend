@@ -84,7 +84,7 @@ class BookController {
   });
 
   getBooks = asyncHandler(async (req: Request, res: Response) => {
-    const { search, category, sortBy, sortOrder } = req.query;
+    const { search, category, collection, grade, sortBy, sortOrder } = req.query;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 8;
 
@@ -94,6 +94,8 @@ class BookController {
     const books = await BookServices.getBooks(
       search as unknown as string,
       category as unknown as string,
+      collection as unknown as string,
+      grade as unknown as string,
       skip,
       limit,
       sortBy as unknown as string,
@@ -221,6 +223,7 @@ class BookController {
       message: 'Book deleted successfully',
     });
   });
+
 }
 
 export default new BookController();

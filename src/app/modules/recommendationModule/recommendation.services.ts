@@ -9,7 +9,7 @@ export const createRecommendation = async (recommendation: IRecommendation) => {
 
 // service for get single recommendation
 export const getSingleRecommendationByCategory = async (id: string) => {
-  return await Recommendation.findOne({ category: id });
+  return await Recommendation.findOne({ category: id }).populate('category', 'title ageGroup').populate('bookCategorySuggestions', 'title');
 };
 
 // service for update recommendation

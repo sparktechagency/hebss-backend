@@ -20,6 +20,7 @@ const subscriptionPurchaseSchema = new mongoose.Schema<ISubscriptionPurchase>(
       required: true,
     },
     paymentStatus: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' },
+    isActive: { type: Boolean, default: true },
     paymentSource: {
       number: { type: String, required: true },
       tnxId: { type: String, required: true },
