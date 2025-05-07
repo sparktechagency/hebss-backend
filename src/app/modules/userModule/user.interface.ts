@@ -7,7 +7,8 @@ enum Gender {
 }
 
 interface IUser extends Document {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: string;
   password: string;
@@ -22,7 +23,6 @@ interface IUser extends Document {
   facebookId?: string;
   provider?: 'local' | 'google' | 'facebook';
   survey: Types.ObjectId;
-  gender: Gender;
 
   // method declarations
   comparePassword(userPlanePassword: string): boolean

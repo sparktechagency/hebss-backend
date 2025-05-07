@@ -58,7 +58,7 @@ const createUserZodSchema = z.object({
 
     survey: z.string().optional(), // Assuming ObjectId will be passed as a string
 
-    gender: genderEnum,
+    // gender: genderEnum,
   }),
 });
 
