@@ -5,9 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const auth_controllers_1 = __importDefault(require("./auth.controllers"));
+const passport_1 = __importDefault(require("passport"));
 const userAuthRouter = express_1.default.Router();
 // outlet also can be login using the route
 userAuthRouter.post('/login', auth_controllers_1.default.userLogin);
+// Google auth routes
+userAuthRouter.get('/google', passport_1.default.authenticate('google', { scope: ['profile', 'email'] }));
+userAuthRouter.get('/google/callback', passport_1.default.authenticate('google', { failureRedirect: '/login' }), auth_controllers_1.default.googleCallback);
+// Facebook auth routes
+userAuthRouter.get('/facebook', passport_1.default.authenticate('facebook', { scope: ['email'] }));
+userAuthRouter.get('/facebook/callback', passport_1.default.authenticate('facebook', { failureRedirect: '/login' }), auth_controllers_1.default.facebookCallback);
 // route for resend email verification code
 userAuthRouter.post('/email-verification/resend-code', auth_controllers_1.default.resendEmailVerificationCode);
 // route for user email verify

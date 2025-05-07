@@ -21,5 +21,9 @@ const IdGenerator = {
     generateId: () => {
         return (0, uuid_1.v4)();
     },
+    generateSerialId: (prefix, lastIdNumber, length = 5) => {
+        const newNumber = (lastIdNumber + 1).toString().padStart(length, '0');
+        return `${prefix}-${newNumber}`;
+    },
 };
 exports.default = IdGenerator;

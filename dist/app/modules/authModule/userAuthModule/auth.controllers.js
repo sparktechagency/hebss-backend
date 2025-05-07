@@ -49,8 +49,7 @@ const userLogin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, vo
     const accessToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_access_token_secret, config_1.default.jwt_access_token_expiresin);
     const refreshToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_refresh_token_secret, config_1.default.jwt_refresh_token_expiresin);
     const userInfo = {
-        firstName: user.firstName,
-        lastName: user.lastName,
+        name: user.name,
         email: user.email,
         _id: user._id,
         role: user.role,
@@ -88,7 +87,7 @@ const resendEmailVerificationCode = (0, asyncHandler_1.default)((req, res) => __
     const mailOptions = {
         from: config_1.default.gmail_app_user,
         to: email,
-        subject: 'Email Verification',
+        subject: 'Illuminate Muslim Minds - Email Verification',
         text: content,
     };
     (0, sendEmail_1.default)(mailOptions);
@@ -262,6 +261,33 @@ const getAccessTokenByRefreshToken = (0, asyncHandler_1.default)((req, res) => _
         },
     });
 }));
+const googleCallback = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // const token = generateToken(req.user);
+    if (!req.user) {
+        throw new errors_1.default.BadRequestError('Invalid user info!');
+    }
+    const user = req.user;
+    // generate token
+    const payload = {
+        email: user.email,
+        role: 'user',
+    };
+    const accessToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_access_token_secret, config_1.default.jwt_access_token_expiresin);
+    res.redirect(`${config_1.default.frontend_url}/auth/callback?token=${accessToken}`);
+}));
+const facebookCallback = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.user) {
+        throw new errors_1.default.BadRequestError('Invalid user info!');
+    }
+    const user = req.user;
+    // generate token
+    const payload = {
+        email: user.email,
+        role: 'user',
+    };
+    const accessToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_access_token_secret, config_1.default.jwt_access_token_expiresin);
+    res.redirect(`${config_1.default.frontend_url}/auth/callback?token=${accessToken}`);
+}));
 exports.default = {
     userLogin,
     resendEmailVerificationCode,
@@ -271,4 +297,6 @@ exports.default = {
     resetPassword,
     changePassword,
     getAccessTokenByRefreshToken,
+    googleCallback,
+    facebookCallback,
 };

@@ -13,8 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("./user.model"));
-const patientProfile_model_1 = __importDefault(require("../profileModule/patientProfile/patientProfile.model"));
-const therapistProfile_model_1 = __importDefault(require("../profileModule/therapistProfile/therapistProfile.model"));
 // service for create new user
 const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
     return yield user_model_1.default.create(data);
@@ -23,25 +21,29 @@ const createUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
 const getSpecificUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     return yield user_model_1.default.findOne({ _id: id })
         .populate({
-        path: 'profile',
+        path: 'survey',
         select: '',
     })
-        .select('-password');
+        .select('-password -verification');
 });
 // service for get specific user
-const getAllUser = () => __awaiter(void 0, void 0, void 0, function* () {
-    return yield user_model_1.default.find()
+const getAllUser = (query) => __awaiter(void 0, void 0, void 0, function* () {
+    const matchCondition = {};
+    if (query) {
+        matchCondition.$text = { $search: query }; // Add search criteria if provided
+    }
+    return yield user_model_1.default.find(matchCondition)
         .populate({
-        path: 'profile',
+        path: 'survey',
         select: '',
     })
-        .select('-password');
+        .select('-password -verification');
 });
 // service for get specific user
 const getSpecificUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
     return yield user_model_1.default.findOne({ email })
         .populate({
-        path: 'profile',
+        path: 'survey',
         select: '',
     })
         .select('-password');
@@ -51,24 +53,22 @@ const updateSpecificUser = (id, data) => __awaiter(void 0, void 0, void 0, funct
     return yield user_model_1.default.findOneAndUpdate({ _id: id }, data);
 });
 // service for delete specific user
-const deleteSpecificUser = (id, role) => __awaiter(void 0, void 0, void 0, function* () {
-    yield user_model_1.default.deleteOne({ _id: id });
-    if (role === 'patient') {
-        yield patientProfile_model_1.default.deleteOne({ user: id });
-    }
-    else if (role === 'therapist') {
-        yield therapistProfile_model_1.default.deleteOne({ user: id });
-    }
-    else {
-        return false;
-    }
-    return true;
-});
+// const deleteSpecificUser = async (id: string, role: string) => {
+//   await User.deleteOne({ _id: id });
+//   if (role === 'patient') {
+//     await PatientProfile.deleteOne({ user: id });
+//   } else if (role === 'therapist') {
+//     await TherapistProfile.deleteOne({ user: id });
+//   } else {
+//     return false;
+//   }
+//   return true;
+// };
 exports.default = {
     createUser,
     getSpecificUser,
     getSpecificUserByEmail,
     updateSpecificUser,
-    deleteSpecificUser,
+    // deleteSpecificUser,
     getAllUser,
 };

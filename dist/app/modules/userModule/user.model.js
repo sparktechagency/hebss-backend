@@ -6,6 +6,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const validator_1 = __importDefault(require("validator"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+var Gender;
+(function (Gender) {
+    Gender["Male"] = "male";
+    Gender["Female"] = "female";
+    Gender["Other"] = "other";
+})(Gender || (Gender = {}));
 const userSchema = new mongoose_1.default.Schema({
     firstName: String,
     lastName: String,
@@ -23,7 +29,6 @@ const userSchema = new mongoose_1.default.Schema({
     phone: {
         type: String,
         unique: true,
-        required: true,
     },
     password: {
         type: String,
@@ -37,11 +42,8 @@ const userSchema = new mongoose_1.default.Schema({
     },
     role: {
         type: String,
-        enum: {
-            values: ['patient', 'therapist'],
-            message: '{VALUE} is not accepted as a role value. Use patient/therapist.',
-        },
-        required: true,
+        enum: ['user'],
+        default: 'user',
     },
     status: {
         type: String,
@@ -61,18 +63,23 @@ const userSchema = new mongoose_1.default.Schema({
             default: null,
         },
     },
-    isSocial: {
-        type: Boolean,
-        default: false,
-    },
-    fcmToken: {
+    googleId: {
         type: String,
         default: null,
     },
-    profile: {
+    facebookId: {
+        type: String,
+        default: null,
+    },
+    provider: {
+        type: String,
+        enum: ['local', 'google', 'facebook'],
+        default: 'local',
+    },
+    survey: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        refPath: 'role'
-    }
+        ref: 'survey',
+    },
 }, {
     timestamps: true,
 });
@@ -93,5 +100,11 @@ userSchema.methods.comparePassword = function (userPlanePassword) {
 userSchema.methods.compareVerificationCode = function (userPlaneCode) {
     return bcrypt_1.default.compareSync(userPlaneCode, this.verification.code);
 };
+userSchema.index({
+    firstName: 'text',
+    lastName: 'text',
+    email: 'text',
+    phone: 'text',
+});
 const User = mongoose_1.default.model('user', userSchema);
 exports.default = User;
