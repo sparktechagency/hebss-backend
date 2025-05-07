@@ -17,7 +17,7 @@ const envSchema = z.object({
   JWT_REFRESH_TOKEN_SECRET: z.string().min(1, 'Refresh token secret key is required'),
   JWT_REFRESH_TOKEN_EXPIRESIN: z.string().default('30d'),
 
-  referral_point: z.string().min(1, 'Referral point is required'),
+  // referral_point: z.string().min(1, 'Referral point is required'),
 
   GMAIL_APP_USER: z.string().email('Invalid email format'),
   GMAIL_APP_PASSWORD: z.string().min(1, 'Gmail app password is required'),
@@ -47,7 +47,7 @@ export default {
   jwt_refresh_token_expiresin: envVars.JWT_REFRESH_TOKEN_EXPIRESIN,
 
   // referral point
-  referral_point: process.env.REFERRAL_POINT,
+  // referral_point: process.env.REFERRAL_POINT,
 
   gmail_app_user: envVars.GMAIL_APP_USER,
   gmail_app_password: envVars.GMAIL_APP_PASSWORD,
