@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 
 // service for get favorite books of a user
 const getFavoriteBooksByUserId = async (userId: string) => {
-  return await FavoriteBook.findOne({ user: userId });
+  return await FavoriteBook.findOne({ user: userId }).populate('books');
 };
 
 // controller for add book in favoritebook list by user
