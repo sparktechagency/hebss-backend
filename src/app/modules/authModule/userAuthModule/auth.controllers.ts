@@ -57,7 +57,7 @@ const userLogin = asyncHandler(async (req: Request, res: Response) => {
   );
 
   const userInfo = {
-    name: user.name,
+    name: user.firstName + ' ' + user.lastName,
     email: user.email,
     _id: user._id,
     role: user.role,

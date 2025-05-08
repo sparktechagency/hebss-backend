@@ -49,7 +49,7 @@ const userLogin = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, vo
     const accessToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_access_token_secret, config_1.default.jwt_access_token_expiresin);
     const refreshToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_refresh_token_secret, config_1.default.jwt_refresh_token_expiresin);
     const userInfo = {
-        name: user.name,
+        name: user.firstName + ' ' + user.lastName,
         email: user.email,
         _id: user._id,
         role: user.role,
