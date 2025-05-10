@@ -4,6 +4,8 @@ import sendResponse from '../../../shared/sendResponse';
 import CustomError from '../../errors';
 import recommendationServices from './recommendation.services';
 import { Request, Response } from 'express';
+import categoryServices from '../categoryModule/category.services';
+import { Types } from 'mongoose';
 
 // controller for create new recommendation
 const createRecommendation = asyncHandler(async (req: Request, res: Response) => {
@@ -22,8 +24,18 @@ const createRecommendation = asyncHandler(async (req: Request, res: Response) =>
 
 // controller for get recommandation by category
 const getRecommendationByCategory = asyncHandler(async (req: Request, res: Response) => {
-  const { categoryId } = req.params;
-  const recommendation = await recommendationServices.getSingleRecommendationByCategory(categoryId);
+  const { dateOfBirth } = req.params;
+  // extract age group from date of birth
+  const year = new Date(dateOfBirth).getFullYear();
+  const age = new Date().getFullYear() - year;
+
+  
+  const category: any = await categoryServices.getCategoryByAge(age);
+  if(!category){
+    throw new CustomError.NotFoundError('Category not found for the respected date of birth!');
+  }
+
+  const recommendation = await recommendationServices.getSingleRecommendationByCategory(category._id);
   if (!recommendation) {
     throw new CustomError.NotFoundError('Recommendation not found!');
   }

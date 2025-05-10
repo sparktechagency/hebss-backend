@@ -22,6 +22,22 @@ class ReviewServices {
   async deleteReview(id: string) {
     return await Review.deleteOne({ _id: id });
   }
+
+  async getAllReviews(search: string, skip: number, limit: number) {
+    const query: any = {};
+    if (search) {
+      query.$or = [
+        { difficulty: { $regex: search, $options: 'i' } },
+        { topicAndTheme: { $regex: search, $options: 'i' } },
+        { comment: { $regex: search, $options: 'i' } },
+      ];
+    }
+    return await Review.find(query).skip(skip).limit(limit);
+  }
+
+  async countReviews() {
+    return await Review.countDocuments();
+  }
 }
 
 export default new ReviewServices();

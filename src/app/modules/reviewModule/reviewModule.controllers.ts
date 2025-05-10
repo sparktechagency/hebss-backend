@@ -75,6 +75,28 @@ class ReviewController {
       message: 'Review deleted successfully',
     });
   });
+
+  getAllReviews = asyncHandler(async (req: Request, res: Response) => {
+    const { search } = req.query;
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 8;
+    const skip = (page - 1) * limit;
+    const reviews = await reviewModuleServices.getAllReviews(search as string, skip, limit);
+    const totalReviews = await reviewModuleServices.countReviews();
+    const totalPages = Math.ceil(totalReviews / limit);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      status: 'success',
+      message: 'Reviews retrieved successfully',
+      meta: {
+        totalData: totalReviews,
+        totalPage: totalPages,
+        currentPage: page,
+        limit: limit,
+      },
+      data: reviews,
+    });
+  });
 }
 
 export default new ReviewController();

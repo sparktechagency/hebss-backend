@@ -8,7 +8,7 @@ const recommendationRouter = express.Router();
 recommendationRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
 
 recommendationRouter.post('/create', recommendationControllers.createRecommendation);
-recommendationRouter.get('/retrieve/:categoryId', recommendationControllers.getRecommendationByCategory);
+recommendationRouter.get('/retrieve/:dateOfBirth', recommendationControllers.getRecommendationByCategory);
 recommendationRouter.patch('/update/:id', recommendationControllers.updateRecommendation);
 recommendationRouter.delete('/delete/:id', recommendationControllers.deleteRecommendation);
 

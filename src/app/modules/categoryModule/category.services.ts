@@ -22,6 +22,24 @@ class CategoryService {
   async deleteAllCategory() {
     return await Category.deleteMany({});
   }
+
+  async getCategoryByAge(age: number) {
+    const categories = await Category.find();
+  
+    for (const category of categories) {
+      const match = category.ageGroup.match(/(\d+)\s*-\s*(\d+)/);
+      if (match) {
+        const minAge = parseInt(match[1], 10);
+        const maxAge = parseInt(match[2], 10);
+  
+        if (age >= minAge && age <= maxAge) {
+          return category;
+        }
+      }
+    }
+  
+    return null;
+  }
 }
 
 export default new CategoryService();

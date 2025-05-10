@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import IRecommendation from "./recommendation.interface";
 import Recommendation from "./recommendation.model";
 
@@ -8,7 +9,7 @@ export const createRecommendation = async (recommendation: IRecommendation) => {
 };
 
 // service for get single recommendation
-export const getSingleRecommendationByCategory = async (id: string) => {
+export const getSingleRecommendationByCategory = async (id: Types.ObjectId) => {
   return await Recommendation.findOne({ category: id }).populate('category', 'title ageGroup').populate('bookCategorySuggestions', 'title');
 };
 
