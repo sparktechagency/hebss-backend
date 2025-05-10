@@ -66,4 +66,4 @@ jobs:
             [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  
             cd ${{ env.DEPLOY_PATH }} 
 
-            pm2 restart ecosystem.config.js || pm2 start ecosystem.config.js
+            pm2 reload dist/server.js --name backend || pm2 start dist/server.js --name backend
