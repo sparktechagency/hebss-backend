@@ -3,17 +3,28 @@ import { IOrder } from './order.interface';
 import Order from './order.model';
 
 class OrderService {
-    async createOrder(orderData: IOrder) {
-      const order = new Order(orderData);
-      return await order.save();
+    async createOrder(orderData: Partial<IOrder>) {
+      return await Order.create(orderData);
     }
   
-    async getOrders() {
-      return await Order.find();
+    async getOrders(searchTerm: string, skip: number, limit: number) {
+      const search: any = {};
+    
+      if (searchTerm) {
+        search.$text = { $search: searchTerm };
+      }
+    console.log(search)
+      return await Order.find(search).skip(skip).limit(limit);
+    }
+    async countOrders() {
+      return await Order.countDocuments();
     }
   
     async getOrderById(id: string) {
       return await Order.findById(id);
+    }
+    async getOrderBySessionId(sessionId: string) {
+      return await Order.findOne({ sessionId });
     }
   
     async updateOrder(id: string, status: string) {

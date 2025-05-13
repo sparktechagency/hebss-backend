@@ -10,9 +10,9 @@ export interface IOrder extends Document {
   items: [
     {
       itemId: Types.ObjectId;
-      name: string;
-      price: number;
-      currency: string;
+      // name: string;
+      // price: number;
+      // currency: string;
       quantity: number;
     },
   ];
@@ -20,11 +20,11 @@ export interface IOrder extends Document {
     amount: number;
     currency: string;
   };
-  discount: {
-    type: string;
-    amount: number;
-    currency: string;
-  };
+  // discount: {
+  //   type: string;
+  //   amount: number;
+  //   currency: string;
+  // };
   total: {
     amount: number;
     currency: string;
@@ -44,4 +44,5 @@ export interface IOrder extends Document {
   };
   createdAt: Date;
   updatedAt: Date;
+  sessionId: string;
 }

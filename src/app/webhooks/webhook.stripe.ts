@@ -80,6 +80,13 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
     }
 
     case 'customer.subscription.deleted': {
+      const existingPurchase = await subscriptionPurchaseServices.getSubscriptionPurchaseByUserId(user._id as unknown as string);
+      if (existingPurchase) {
+        await subscriptionPurchaseServices.updateSubscriptionPurchase(existingPurchase._id as string, {
+          isActive: false,
+        });
+      }
+
       user.subscription.isActive = false;
       await user.save();
 
@@ -92,17 +99,35 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
       });
       break;
     }
-
     case 'customer.subscription.updated': {
       const subscription = event.data.object as Stripe.Subscription;
-      const newPriceId = subscription.items.data[0]?.price?.id;
       const subscriptionId = subscription.id;
+      const newPriceId = subscription.items.data[0]?.price?.id;
+      const cancelAtPeriodEnd = subscription.cancel_at_period_end;
 
-      const existingPurchase = await subscriptionPurchaseServices.getSubscriptionPurchaseByPriceId(newPriceId);
+      const existingPurchase = await subscriptionPurchaseServices.getSubscriptionPurchaseByUserId(user._id as unknown as string);
 
-      let purchaseId = existingPurchase?._id;
+      // Do nothing if cancel_at_period_end is set — wait for the deletion event
+      if (cancelAtPeriodEnd) {
+        console.log('Subscription is set to cancel at period end');
+        // Optionally send email to inform the user
+        await sendMail({
+          from: config.gmail_app_user as string,
+          to: user.email,
+          subject: 'Subscription Will End Soon',
+          text: `Your subscription is scheduled to end after the current billing period.`,
+        });
+        break;
+      }
 
+      // Plan changed
       if (existingPurchase?.subscription?.priceId !== newPriceId) {
+        if (existingPurchase) {
+          await subscriptionPurchaseServices.updateSubscriptionPurchase(existingPurchase._id as string, {
+            isActive: false,
+          });
+        }
+
         const newPurchase = await subscriptionPurchaseServices.createSubscriptionPurchase({
           user: user._id as Types.ObjectId,
           subscription: {
@@ -113,28 +138,21 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
           paymentStatus: 'paid',
           isActive: true,
         });
-        purchaseId = newPurchase._id;
 
-        if (existingPurchase) {
-          await subscriptionPurchaseServices.updateSubscriptionPurchase(existingPurchase._id as string, {
-            isActive: false,
-          });
-        }
+        user.subscription = {
+          isActive: true,
+          purchaseId: newPurchase._id as Types.ObjectId,
+        };
+        await user.save();
 
-        const content = `Your subscription plan has been updated successfully!`;
         await sendMail({
           from: config.gmail_app_user as string,
           to: user.email,
-          subject: 'Illuminate Muslim Minds - Plan Switched',
-          text: content,
+          subject: 'Plan Switched',
+          text: `Your subscription plan has been updated successfully.`,
         });
       }
 
-      user.subscription = {
-        isActive: true,
-        purchaseId: purchaseId as Types.ObjectId,
-      };
-      await user.save();
       break;
     }
 

@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { IOrder } from './order.interface';
+import { CURRENCY_ENUM } from '../../../enums/currency';
 
 const orderSchema = new mongoose.Schema<IOrder>({
   orderId: { type: String, required: true },
@@ -21,11 +22,11 @@ const orderSchema = new mongoose.Schema<IOrder>({
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
   },
-  discount: {
-    type: { type: String, enum: ['percentage', 'fixed'], default: 'percentage' },
-    amount: { type: Number, required: true },
-    currency: { type: String, required: true },
-  },
+  // discount: {
+  //   type: { type: String, enum: ['percentage', 'fixed'], default: 'percentage' },
+  //   amount: { type: Number, default: 0 },
+  //   currency: { type: String, default: CURRENCY_ENUM.USD },
+  // },
   total: {
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
@@ -43,7 +44,10 @@ const orderSchema = new mongoose.Schema<IOrder>({
     status: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' },
     tnxId: { type: String, required: true },
   },
+  sessionId: { type: String, required: true },
 });
+
+orderSchema.index({ orderId: 'text' });
 
 const Order = mongoose.model<IOrder>('order', orderSchema);
 
