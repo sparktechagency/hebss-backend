@@ -31,6 +31,13 @@ const envSchema = z.object({
   GOOGLE_CALLBACK_URL: z.string().min(1, 'Google callback URL is required'),
   FACEBOOK_REDIRECT_URL: z.string().min(1, 'Facebook redirect URL is required'),
   FRONTEND_URL: z.string().min(1, 'Frontend URL is required'),
+
+  STRIPE_SECRET_KEY: z.string().min(1, 'Stripe secret key is required'),
+  STRIPE_WEBHOOK_SECRET: z.string().min(1, 'Stripe webhook secret is required'),
+
+  BASIC_PRICE_ID: z.string().min(1, 'Basic price ID is required'),
+  STANDARD_PRICE_ID: z.string().min(1, 'Standard price ID is required'),
+  PREMIUM_PRICE_ID: z.string().min(1, 'Premium price ID is required'),
 });
 
 const envVars = envSchema.parse(process.env);
@@ -61,4 +68,11 @@ export default {
   google_callback_url: envVars.GOOGLE_CALLBACK_URL,
   facebook_redirect_url: envVars.FACEBOOK_REDIRECT_URL,
   frontend_url: envVars.FRONTEND_URL,
+
+  stripe_secret_key: envVars.STRIPE_SECRET_KEY,
+  stripe_webhook_secret: envVars.STRIPE_WEBHOOK_SECRET,
+
+  basic_price_id: envVars.BASIC_PRICE_ID,
+  standard_price_id: envVars.STANDARD_PRICE_ID,
+  premium_price_id: envVars.PREMIUM_PRICE_ID,
 };

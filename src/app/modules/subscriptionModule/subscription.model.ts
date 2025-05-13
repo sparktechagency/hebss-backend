@@ -11,7 +11,7 @@ const subscriptionSchema = new mongoose.Schema<ISubscription>(
     },
     type: {
       type: String,
-      enum: ['monthly', 'biannually', 'yearly'],
+      enum: ['monthly', 'biannually', 'quarterly'],
       required: true,
     },
     features: { type: [String], required: true },

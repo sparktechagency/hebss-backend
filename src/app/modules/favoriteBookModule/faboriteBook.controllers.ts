@@ -45,8 +45,10 @@ const removeBookFromFavorite = asyncHandler(async (req: Request, res: Response) 
     throw new CustomError.NotFoundError('Favorite books not found!');
   }
 
-  if (favoriteBooks.books.includes(bookId)) {
-    favoriteBooks.books = favoriteBooks.books.filter((book) => book.toString() !== bookId);
+  if (favoriteBooks.books.some(book => book._id.toString() === bookId.toString())) {
+    favoriteBooks.books = favoriteBooks.books.filter(
+      book => book._id.toString() !== bookId.toString()
+    );
     await favoriteBooks.save();
   }
 

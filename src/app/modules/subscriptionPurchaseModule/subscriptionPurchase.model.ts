@@ -6,11 +6,10 @@ const subscriptionPurchaseSchema = new mongoose.Schema<ISubscriptionPurchase>(
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'user', unique: true, required: true },
     subscription: { 
         id: {
-            type: mongoose.Schema.Types.ObjectId, ref: 'subscription', required: true
+            type: String, required: true
         },
-        type: {
+        priceId: {
             type: String,
-            enum: ['monthly', 'biannually', 'yearly'],
             required: true
         }
      },
@@ -21,17 +20,17 @@ const subscriptionPurchaseSchema = new mongoose.Schema<ISubscriptionPurchase>(
     },
     paymentStatus: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' },
     isActive: { type: Boolean, default: true },
-    paymentSource: {
-      number: { type: String, required: true },
-      tnxId: { type: String, required: true },
-      type: {
-        type: String,
-        enum: ['visa', 'mastercard', 'amex', 'other'],
-        required: true,
-      },
-      name: { type: String },
-      isSaved: { type: Boolean, default: false },
-    },
+    // paymentSource: {
+    //   number: { type: String, required: true },
+    //   tnxId: { type: String, required: true },
+    //   type: {
+    //     type: String,
+    //     enum: ['visa', 'mastercard', 'amex', 'other'],
+    //     required: true,
+    //   },
+    //   name: { type: String },
+    //   isSaved: { type: Boolean, default: false },
+    // },
   },
   {
     timestamps: true,

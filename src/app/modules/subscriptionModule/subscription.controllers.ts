@@ -4,11 +4,24 @@ import CustomError from '../../errors';
 import sendResponse from '../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import SubscriptionServices from './subscription.services';
+import config from '../../../config';
 
 class SubscriptionController {
   createSubscription = asyncHandler(async (req: Request, res: Response) => {
     const subscriptionData = req.body;
     const newSubscription = await SubscriptionServices.createSubscription(subscriptionData);
+
+    switch (subscriptionData.type) {
+      case 'monthly':
+        subscriptionData.priceId = config.basic_price_id;
+        break;
+      case 'biannually':
+        subscriptionData.priceId = config.standard_price_id;
+        break;
+      case 'quarterly':
+        subscriptionData.priceId = config.premium_price_id;
+        break;
+    }
 
     if (!newSubscription) {
       throw new CustomError.BadRequestError('Failed to create subscription!');

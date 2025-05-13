@@ -16,6 +16,14 @@ const getSpecificUser = async (id: string): Promise<IUser> => {
     })
     .select('-password -verification');
 };
+const getSpecificUserByCustomerId = async (id: string): Promise<IUser> => {
+  return await User.findOne({ stripeCustomerId: id })
+    .populate({
+      path: 'survey',
+      select: '',
+    })
+    .select('-password -verification');
+};
 
 // service for get specific user
 const getAllUser = async (query: string): Promise<IUser[]> => {
@@ -68,4 +76,5 @@ export default {
   updateSpecificUser,
   // deleteSpecificUser,
   getAllUser,
+  getSpecificUserByCustomerId,
 };

@@ -11,13 +11,16 @@ import notFound from './app/middlewares/notFound';
 import routers from './app/routers';
 import globalErrorHandler from './app/middlewares/globalErrorHandler';
 import { errorHandler, successHandler } from './config/morgan';
-import logger from './config/logger';
 import CustomError from './app/errors';
 import rootDesign from './app/middlewares/rootDesign';
 import passport from './config/passport';
 import session from 'express-session';
+import { stripeWebhookHandler } from './app/webhooks/webhook.stripe';
 
 const app: Application = express();
+
+// stripe webhook
+app.post('/webhook/stripe', express.raw({ type: 'application/json' }), stripeWebhookHandler);
 
 // global middlewares
 app.use(cors());

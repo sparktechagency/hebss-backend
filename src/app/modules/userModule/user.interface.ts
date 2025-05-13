@@ -23,6 +23,11 @@ interface IUser extends Document {
   facebookId?: string;
   provider?: 'local' | 'google' | 'facebook';
   survey: Types.ObjectId;
+  subscription: {
+    purchaseId: Types.ObjectId;
+    isActive: boolean;
+  }
+  stripeCustomerId?: string;
 
   // method declarations
   comparePassword(userPlanePassword: string): boolean

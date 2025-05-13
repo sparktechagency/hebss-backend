@@ -78,6 +78,21 @@ const userSchema = new mongoose.Schema<IUser>(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'survey',
     },
+    subscription: {
+      purchaseId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'subscriptionPurchase',
+        default: null,
+      },
+      isActive: {
+        type: Boolean,
+        default: false,
+      },
+    },
+    stripeCustomerId: {
+      type: String,
+      default: null,
+    },
   },
   {
     timestamps: true,

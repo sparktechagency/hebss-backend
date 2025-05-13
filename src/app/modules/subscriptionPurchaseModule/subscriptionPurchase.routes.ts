@@ -13,5 +13,7 @@ subscriptionPurchaseRouter.get('/retrieve/user/:id', SubscriptionPurchaseControl
 subscriptionPurchaseRouter.get('/all/retrieve', SubscriptionPurchaseController.getSubscriptionPurchasesBySubscriptionType);
 subscriptionPurchaseRouter.post('/send-subscription-disable-request/:id', SubscriptionPurchaseController.sendSubscriptionDisableRequest);
 subscriptionPurchaseRouter.patch('/disable/subscription/:id', SubscriptionPurchaseController.disableSubscription);
+subscriptionPurchaseRouter.get('/retrieve/all/users/:subscriptionId', SubscriptionPurchaseController.getAllUsersBySubscriptionId);
+subscriptionPurchaseRouter.patch('/cancel/subscription-purchase/:id', SubscriptionPurchaseController.cancelSubscription);
 
 export default subscriptionPurchaseRouter;
