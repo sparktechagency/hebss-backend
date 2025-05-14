@@ -10,6 +10,7 @@ import IdGenerator from '../../../utils/IdGenerator';
 import mongoose from 'mongoose';
 import Stripe from 'stripe';
 import config from '../../../config';
+import billingServices from '../billingModule/billing.services';
 
 const stripe = new Stripe(config.stripe_secret_key as string);
 
@@ -123,6 +124,13 @@ class OrderController {
      await Book.findByIdAndUpdate(item.itemId, { $inc: { quantity: -item.quantity } });
    }));
 
+
+   // create billing
+   await billingServices.createBilling({
+     user: orderData.user.userId,
+     type: 'order',
+     contentId: newOrder._id,
+   });
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,

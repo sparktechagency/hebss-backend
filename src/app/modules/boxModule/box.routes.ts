@@ -9,6 +9,7 @@ boxRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, E
 
 boxRouter.post('/create', BoxController.createBox);
 boxRouter.get('/retrieve', BoxController.getBoxes);
+boxRouter.get('/retrieve/:id', BoxController.getBoxById);
 boxRouter.patch('/customize/:id', BoxController.customizeBookInBox);
 
 export default boxRouter;

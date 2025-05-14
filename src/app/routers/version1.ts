@@ -23,6 +23,7 @@ import surveyRouter from '../modules/surveyModule/survey.routes';
 import recommendationRouter from '../modules/recommendationModule/recommendation.routes';
 import reviewRouter from '../modules/reviewModule/reviewModule.routes';
 import favoriteBookRouter from '../modules/favoriteBookModule/favoriteBook.routes';
+import billingRouter from '../modules/billingModule/billing.routes';
 
 const routersVersionOne = express.Router();
 
@@ -50,6 +51,7 @@ routersVersionOne.use('/survey', surveyRouter);
 routersVersionOne.use('/recommendation', recommendationRouter);
 routersVersionOne.use('/review', reviewRouter);
 routersVersionOne.use('/favorite-book', favoriteBookRouter);
+routersVersionOne.use('/billing', billingRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);

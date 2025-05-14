@@ -64,6 +64,20 @@ class BoxController {
     });
   });
 
+  getBoxById = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const box = await BoxServices.getBoxById(id);
+    if (!box) {
+      throw new CustomError.NotFoundError('Box not found!');
+    }
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      status: 'success',
+      message: 'Box retrieved successfully',
+      data: box,
+    });
+  });
+
   customizeBookInBox = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
     const boxData = req.body;

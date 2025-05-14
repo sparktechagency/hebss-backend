@@ -7,6 +7,7 @@ import userServices from '../modules/userModule/user.services';
 import subscriptionPurchaseServices from '../modules/subscriptionPurchaseModule/subscriptionPurchase.services';
 import { Types } from 'mongoose';
 import sendMail from '../../utils/sendEmail';
+import billingServices from '../modules/billingModule/billing.services';
 
 const stripe = new Stripe(config.stripe_secret_key as string);
 
@@ -55,6 +56,13 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
         purchaseId: subscriptionPurchase._id as Types.ObjectId,
       };
       await user.save();
+
+      // create billing
+      await billingServices.createBilling({
+        user: user._id as Types.ObjectId,
+        type: 'subscriptionPurchase',
+        contentId: subscriptionPurchase._id as Types.ObjectId,
+      });
 
       const content = `Congratulations! Your subscription purchase is successful!`;
       await sendMail({
