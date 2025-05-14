@@ -76,13 +76,6 @@ const createOrderZodSchema = z.object({
         required_error: 'Currency is required!',
       }),
     }),
-    discount: z
-      .object({
-        type: discountTypeEnum.optional(),
-        amount: z.number().min(0, 'Discount amount cannot be negative!').optional(),
-        currency: z.string().optional(),
-      })
-      .optional(),
     total: z.object({
       amount: z
         .number({
