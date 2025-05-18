@@ -38,6 +38,9 @@ const envSchema = z.object({
   BASIC_PRICE_ID: z.string().min(1, 'Basic price ID is required'),
   STANDARD_PRICE_ID: z.string().min(1, 'Standard price ID is required'),
   PREMIUM_PRICE_ID: z.string().min(1, 'Premium price ID is required'),
+
+  EASYPOST_TEST_API_KEY: z.string().min(1, 'EasyPost test API key is required'),
+  // EASYPOST_LIVE_API_KEY: z.string().min(1, 'EasyPost live API key is required'),
 });
 
 const envVars = envSchema.parse(process.env);
@@ -75,4 +78,7 @@ export default {
   basic_price_id: envVars.BASIC_PRICE_ID,
   standard_price_id: envVars.STANDARD_PRICE_ID,
   premium_price_id: envVars.PREMIUM_PRICE_ID,
+
+  // easypost_live_api_key: envVars.EASYPOST_LIVE_API_KEY,
+  easypost_test_api_key: envVars.EASYPOST_TEST_API_KEY,
 };

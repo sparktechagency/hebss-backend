@@ -45,4 +45,7 @@ export interface IOrder extends Document {
   createdAt: Date;
   updatedAt: Date;
   sessionId: string;
+  returnLabelUrl: string;
+  returnTrackingCode: string;
+  trackingUrl: string;
 }

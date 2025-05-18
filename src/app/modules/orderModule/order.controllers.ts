@@ -11,12 +11,71 @@ import mongoose from 'mongoose';
 import Stripe from 'stripe';
 import config from '../../../config';
 import billingServices from '../billingModule/billing.services';
+import EasyPost from '@easypost/api';
 
 const stripe = new Stripe(config.stripe_secret_key as string);
+const api = new EasyPost(config.easypost_test_api_key as string);
 
 class OrderController {
+  getShippingRates = asyncHandler(async (req: Request, res: Response) => {
+    const { toAddress, parcelDetails } = req.body;
+
+    const fromAddress = {
+      company: 'Illuminate Muslim Minds',
+      street1: '789 Market St',
+      city: 'San Francisco',
+      state: 'CA',
+      zip: '94103',
+      country: 'US',
+    };
+
+    const shipment = await api.Shipment.create({
+      to_address: toAddress,
+      from_address: fromAddress,
+      parcel: parcelDetails,
+      options: {
+        is_return: true,
+      },
+    });
+
+    if (!shipment) {
+      throw new CustomError.BadRequestError('Failed to retrieve shipping rates');
+    }
+
+    const returnRate = shipment.lowestRate(['USPS']);
+    const boughtShipment = await api.Shipment.buy(shipment.id, returnRate);
+
+    const returnLabelUrl = boughtShipment.postage_label?.label_url;
+    const returnTrackingCode = boughtShipment.tracking_code;
+    const tracker = await api.Tracker.retrieve(boughtShipment.tracker.id);
+    const trackingUrl = tracker.public_url;
+
+    const rates = boughtShipment.rates
+      .filter((rate) => rate.carrier === 'USPS')
+      .map((rate) => ({
+        id: rate.id,
+        carrier: rate.carrier,
+        service: rate.service,
+        rate: rate.rate,
+        deliveryDays: rate.delivery_days,
+        currency: rate.currency,
+      }));
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      status: 'success',
+      message: 'Return shipping label purchased and rates retrieved',
+      data: {
+        rates,
+        returnLabelUrl,
+        returnTrackingCode,
+        trackingUrl,
+      },
+    });
+  });
+
   initiateOrderPayment = asyncHandler(async (req: Request, res: Response) => {
-    const { items, customerEmail } = req.body;
+    const { items, shippingCost, customerEmail } = req.body;
 
     if (!items || items.length === 0) {
       throw new CustomError.BadRequestError('No items in the order.');
@@ -28,7 +87,6 @@ class OrderController {
     const lineItems = items.map((item: any) => {
       const book = books.find((b: any) => b._id.toString() === item.itemId.toString());
       if (!book) throw new CustomError.NotFoundError(`Book ${item.itemId} not found`);
-
       const basePrice = book.price.amount;
       let finalPrice = basePrice;
 
@@ -102,7 +160,7 @@ class OrderController {
       orderId,
       user: orderData.user,
       items: orderData.items,
-      shippingAddress: orderData.shippingAddress,
+      // shippingAddress: orderData.shippingAddress,
       price: {
         amount: totalAmount,
         currency: session.currency!,
@@ -117,20 +175,24 @@ class OrderController {
         tnxId: session.payment_intent?.id as string,
       },
       sessionId: orderData.sessionId,
+      returnLabelUrl: orderData.returnLabelUrl,
+      returnTrackingCode: orderData.returnTrackingCode,
+      trackingUrl: orderData.trackingUrl,
     });
 
     // decrease quantity after creating order
-   Promise.all(orderData.items.map(async (item: any) => {
-     await Book.findByIdAndUpdate(item.itemId, { $inc: { quantity: -item.quantity } });
-   }));
+    Promise.all(
+      orderData.items.map(async (item: any) => {
+        await Book.findByIdAndUpdate(item.itemId, { $inc: { quantity: -item.quantity } });
+      }),
+    );
 
-
-   // create billing
-   await billingServices.createBilling({
-     user: orderData.user.userId,
-     type: 'order',
-     contentId: newOrder._id,
-   });
+    // create billing
+    await billingServices.createBilling({
+      user: orderData.user.userId,
+      type: 'order',
+      contentId: newOrder._id,
+    });
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
@@ -227,7 +289,7 @@ class OrderController {
   // });
 
   getOrders = asyncHandler(async (req: Request, res: Response) => {
-    const {search} = req.query;
+    const { search } = req.query;
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 8;
     const skip = (page - 1) * limit;

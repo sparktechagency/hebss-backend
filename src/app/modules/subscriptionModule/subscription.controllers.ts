@@ -5,11 +5,11 @@ import sendResponse from '../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import SubscriptionServices from './subscription.services';
 import config from '../../../config';
+import { CURRENCY_ENUM } from '../../../enums/currency';
 
 class SubscriptionController {
   createSubscription = asyncHandler(async (req: Request, res: Response) => {
     const subscriptionData = req.body;
-    const newSubscription = await SubscriptionServices.createSubscription(subscriptionData);
 
     switch (subscriptionData.type) {
       case 'monthly':
@@ -22,6 +22,8 @@ class SubscriptionController {
         subscriptionData.priceId = config.premium_price_id;
         break;
     }
+
+    const newSubscription = await SubscriptionServices.createSubscription(subscriptionData);
 
     if (!newSubscription) {
       throw new CustomError.BadRequestError('Failed to create subscription!');
@@ -37,11 +39,36 @@ class SubscriptionController {
 
   getSubscriptions = asyncHandler(async (req: Request, res: Response) => {
     const subscriptions = await SubscriptionServices.getSubscriptions();
+
+    const updatedSubscriptions = subscriptions.map((subscription: any) => {
+      let amount: number;
+      let currency: string;
+
+      if (subscription.type === 'monthly') {
+        amount = 14.99;
+        currency = CURRENCY_ENUM.USD;
+      } else if (subscription.type === 'biannually') {
+        amount = 16.99;
+        currency = CURRENCY_ENUM.USD;
+      } else if (subscription.type === 'quarterly') {
+        amount = 18.99;
+        currency = CURRENCY_ENUM.USD;
+      } else {
+        amount = 0;
+        currency = CURRENCY_ENUM.USD;
+      }
+
+      return {
+        ...subscription.toObject(),
+        price: { amount, currency },
+      };
+    });
+
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       status: 'success',
       message: 'Subscriptions retrieved successfully',
-      data: subscriptions,
+      data: updatedSubscriptions,
     });
   });
 

@@ -31,13 +31,6 @@ const orderSchema = new mongoose.Schema<IOrder>({
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
   },
-  shippingAddress: {
-    state: { type: String, required: true },
-    street: { type: String, required: true },
-    city: { type: String, required: true },
-    country: { type: String, required: true },
-    zipCode: { type: String, required: true },
-  },
   status: { type: String, enum: ['pending', 'shipped', 'delivered', 'failed'], default: 'pending' },
   paymentInfo: {
     type: { type: String, enum: ['cash', 'card', 'online'], default: 'cash' },
@@ -45,6 +38,9 @@ const orderSchema = new mongoose.Schema<IOrder>({
     tnxId: { type: String, required: true },
   },
   sessionId: { type: String, required: true },
+  returnLabelUrl: { type: String},
+  returnTrackingCode: { type: String},
+  trackingUrl: { type: String},
 });
 
 orderSchema.index({ orderId: 'text' });

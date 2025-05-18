@@ -66,35 +66,35 @@ const createOrderZodSchema = z.object({
         .email('Invalid email address!'),
     }),
     items: z.array(orderItemSchema).min(1, 'At least one item is required!'),
-    price: z.object({
-      amount: z
-        .number({
-          required_error: 'Total price amount is required!',
-        })
-        .positive('Total price must be a positive number!'),
-      currency: z.string({
-        required_error: 'Currency is required!',
-      }),
-    }),
-    total: z.object({
-      amount: z
-        .number({
-          required_error: 'Total amount is required!',
-        })
-        .min(0, 'Total amount cannot be negative!'),
-      currency: z.string({
-        required_error: 'Currency is required!',
-      }),
-    }),
-    shippingAddress: addressSchema,
+    // price: z.object({
+    //   amount: z
+    //     .number({
+    //       required_error: 'Total price amount is required!',
+    //     })
+    //     .positive('Total price must be a positive number!'),
+    //   currency: z.string({
+    //     required_error: 'Currency is required!',
+    //   }),
+    // }),
+    // total: z.object({
+    //   amount: z
+    //     .number({
+    //       required_error: 'Total amount is required!',
+    //     })
+    //     .min(0, 'Total amount cannot be negative!'),
+    //   currency: z.string({
+    //     required_error: 'Currency is required!',
+    //   }),
+    // }),
+    // shippingAddress: addressSchema,
     status: statusEnum.optional(), // Default: 'pending' (handled in Mongoose schema)
-    paymentInfo: z.object({
-      type: paymentTypeEnum.optional(), // Default: 'cash'
-      status: paymentStatusEnum.optional(), // Default: 'unpaid'
-      tnxId: z.string({
-        required_error: 'Transaction ID is required!',
-      }),
-    }),
+    // paymentInfo: z.object({
+    //   type: paymentTypeEnum.optional(), // Default: 'cash'
+    //   status: paymentStatusEnum.optional(), // Default: 'unpaid'
+    //   tnxId: z.string({
+    //     required_error: 'Transaction ID is required!',
+    //   }),
+    // }),
   }),
 });
 

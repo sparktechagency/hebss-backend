@@ -1,14 +1,10 @@
 import mongoose from 'mongoose';
 import { ISubscription } from './subscription.interface';
-import { CURRENCY_ENUM } from '../../../enums/currency';
 
 const subscriptionSchema = new mongoose.Schema<ISubscription>(
   {
     name: { type: String, required: true },
-    price: {
-      amount: { type: Number, default: 0 },
-      currency: { type: String, default: CURRENCY_ENUM.USD },
-    },
+    priceId: { type: String },
     type: {
       type: String,
       enum: ['monthly', 'biannually', 'quarterly'],

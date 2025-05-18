@@ -7,6 +7,7 @@ const orderRouter = Router();
 
 orderRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
 
+orderRouter.post('/get-shipping-rates', OrderController.getShippingRates);
 orderRouter.post('/order-checkout', OrderController.initiateOrderPayment);
 orderRouter.post('/create', OrderController.createOrder);
 orderRouter.get('/retrieve', OrderController.getOrders);
