@@ -10,4 +10,12 @@ export interface IInvoice extends Document {
   status: string;
   createdAt: Date;
   updatedAt: Date;
+  paymentStatus: string;
+  paymentType: string;
+  totalAmount: number;
+  dueAmount: number;
+  currency: string;
+  returnLabelUrl: string;
+  returnTrackingCode: string;
+  trackingUrl: string;
 }

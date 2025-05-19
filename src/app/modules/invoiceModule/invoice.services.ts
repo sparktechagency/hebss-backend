@@ -1,10 +1,36 @@
+import IdGenerator from '../../../utils/IdGenerator';
+import userServices from '../userModule/user.services';
 import { IInvoice } from './invoice.interface';
 import Invoice from './invoice.model';
 
 class InvoiceService {
-  async createInvoice(invoiceData: IInvoice) {
-    const invoice = new Invoice(invoiceData);
-    return await invoice.save();
+  async createInvoice() {
+    const users = await userServices.getAllPurchedUsers();
+
+    if (users.length > 0) {
+      const lastInvoice = await this.getLastInvoice();
+      let lastInvoiceId = lastInvoice ? parseInt(lastInvoice.invoiceId.split('-')[1]) : 0;
+
+      await Promise.all(
+        users
+          .filter((user) => user.boxId) // Only users with a valid box
+          .map(async (user) => {
+            // 🔁 Step 1: Deactivate all previous invoices for this user
+            await Invoice.updateMany({ user: user._id, isActive: true }, { $set: { isActive: false } });
+
+            // 🧾 Step 2: Create the new invoice and mark it as active
+            const invoiceData = {
+              invoiceId: IdGenerator.generateSerialId('INV', ++lastInvoiceId, 5),
+              user: user._id,
+              box: user.boxId,
+              isActive: true,
+              soldBooks: [],
+            };
+
+            return await Invoice.create(invoiceData);
+          }),
+      );
+    }
   }
 
   async getAllInactiveInvoicesByUserId(id: string) {

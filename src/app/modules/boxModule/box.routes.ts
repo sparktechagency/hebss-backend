@@ -11,5 +11,6 @@ boxRouter.post('/create', BoxController.createBox);
 boxRouter.get('/retrieve', BoxController.getBoxes);
 boxRouter.get('/retrieve/:id', BoxController.getBoxById);
 boxRouter.patch('/customize/:id', BoxController.customizeBookInBox);
+boxRouter.get('/retrieve/category/:categoryId', BoxController.getSpecificBoxByCategoryId);
 
 export default boxRouter;

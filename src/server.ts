@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import config from './config';
 import app from './app';
+import cron from 'node-cron';
+import invoiceServices from './app/modules/invoiceModule/invoice.services';
 
 let server: any;
 
@@ -8,6 +10,11 @@ let server: any;
 process.on('uncaughtException', (error) => {
   console.log('uncaughtException error', error);
   process.exit(1);
+});
+
+cron.schedule('0 0 1 * *', async () => {
+  await invoiceServices.createInvoice();
+  console.log('Invoice created successfully');
 });
 
 const startServer = async () => {

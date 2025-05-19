@@ -19,6 +19,12 @@ class BoxService {
     return await Box.find({ category: categoryId });
   }
 
+  async getSpecificBoxByCategoryId(categoryId: string) {
+    return await Box.findOne({ category: categoryId }).populate({
+      path: 'category'
+    });
+  }
+
   async updateBox(id: string, boxData: IBox) {
     return await Box.findByIdAndUpdate(id, boxData, { new: true });
   }

@@ -7,7 +7,7 @@ const invoiceRouter = Router();
 
 invoiceRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
 
-invoiceRouter.post('/create', InvoiceController.createInvoice);
+// invoiceRouter.post('/create', InvoiceController.createInvoice);
 invoiceRouter.get('/retrieve/history/user/:id', InvoiceController.getAllInactiveInvoicesByUserId);
 invoiceRouter.get('/current/retrieve/user/:id', InvoiceController.getActiveInvoiceByUserId);
 invoiceRouter.patch('/update/:id', InvoiceController.updateInvoice);

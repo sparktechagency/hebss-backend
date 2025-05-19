@@ -164,6 +164,20 @@ class BoxController {
       message: 'Box customized successfully',
     });
   });
+
+  getSpecificBoxByCategoryId = asyncHandler(async (req: Request, res: Response) => {
+    const { categoryId } = req.params;
+    const box = await BoxServices.getSpecificBoxByCategoryId(categoryId);
+    if (!box) {
+      throw new CustomError.NotFoundError('Box not found!');
+    }
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      status: 'success',
+      message: 'Box retrieved successfully',
+      data: box,
+    });
+  });
 }
 
 export default new BoxController();

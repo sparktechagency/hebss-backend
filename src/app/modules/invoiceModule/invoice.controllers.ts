@@ -8,23 +8,23 @@ import IdGenerator from '../../../utils/IdGenerator';
 import OrderServices from '../orderModule/order.services';
 
 class InvoiceController {
-  createInvoice = asyncHandler(async (req: Request, res: Response) => {
-    const invoiceData = req.body;
+  // createInvoice = asyncHandler(async (req: Request, res: Response) => {
+  //   const invoiceData = req.body;
 
-    // find last id for use creating new order id
-    const lastInvoice = await InvoiceServices.getLastInvoice();
-    const lastInvoiceId = lastInvoice ? parseInt(lastInvoice.invoiceId.split('-')[1]) : 0;
+  //   // find last id for use creating new order id
+  //   const lastInvoice = await InvoiceServices.getLastInvoice();
+  //   const lastInvoiceId = lastInvoice ? parseInt(lastInvoice.invoiceId.split('-')[1]) : 0;
 
-    invoiceData.invoiceId = IdGenerator.generateSerialId('INV', lastInvoiceId, 5);
-    const invoice = await InvoiceServices.createInvoice(invoiceData);
+  //   invoiceData.invoiceId = IdGenerator.generateSerialId('INV', lastInvoiceId, 5);
+  //   const invoice = await InvoiceServices.createInvoice(invoiceData);
 
-    sendResponse(res, {
-      statusCode: StatusCodes.CREATED,
-      status: 'success',
-      message: 'Invoice created successfully',
-      data: invoice,
-    });
-  });
+  //   sendResponse(res, {
+  //     statusCode: StatusCodes.CREATED,
+  //     status: 'success',
+  //     message: 'Invoice created successfully',
+  //     data: invoice,
+  //   });
+  // });
 
   getAllInactiveInvoicesByUserId = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
