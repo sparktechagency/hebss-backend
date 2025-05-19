@@ -110,6 +110,20 @@ class OrderController {
       };
     });
 
+    // Add shipping cost as an additional line item
+    if (shippingCost && shippingCost > 0) {
+      lineItems.push({
+        price_data: {
+          currency: CURRENCY_ENUM.USD,
+          product_data: {
+            name: 'Shipping Cost',
+          },
+          unit_amount: Math.round(shippingCost * 100),
+        },
+        quantity: 1,
+      });
+    }
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
