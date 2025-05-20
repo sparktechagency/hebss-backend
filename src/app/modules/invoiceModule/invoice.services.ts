@@ -1,3 +1,4 @@
+import { populate } from 'dotenv';
 import IdGenerator from '../../../utils/IdGenerator';
 import userServices from '../userModule/user.services';
 import { IInvoice } from './invoice.interface';
@@ -38,7 +39,24 @@ class InvoiceService {
   }
 
   async getActiveInvoiceByUserId(id: string) {
-    return await Invoice.findOne({ user: id, isActive: true });
+    return await Invoice.findOne({ user: id, isActive: true }).populate([
+      {
+        path: 'user',
+        select: 'email phone subscription survey gender role',
+        populate: {
+          path: 'survey',
+          select: '',
+          populate: {
+            path: 'favoriteCollection',
+            select: ''
+          }
+        }
+      },
+      {
+        path: 'box',
+        select: ''
+      }
+    ]);
   }
 
   async updateInvoice(id: string, invoiceData: IInvoice) {

@@ -34,12 +34,14 @@ class OrderController {
       from_address: fromAddress,
       parcel: parcelDetails,
       options: {
+        carrier_accounts: [config.usps_return_carrier_id],
         is_return: true,
       },
     });
 
-    if (!shipment) {
-      throw new CustomError.BadRequestError('Failed to retrieve shipping rates');
+    // Fallback if no rates found
+    if (!shipment.rates || shipment.rates.length === 0) {
+      throw new CustomError.BadRequestError('No rates found for the return shipment');
     }
 
     const returnRate = shipment.lowestRate(['USPS']);

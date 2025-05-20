@@ -20,9 +20,16 @@ class BoxService {
   }
 
   async getSpecificBoxByCategoryId(categoryId: string) {
-    return await Box.findOne({ category: categoryId }).populate({
-      path: 'category'
-    });
+    return await Box.findOne({ category: categoryId }).populate([
+      {
+        path: 'category',
+        select: ''
+      },
+      {
+        path: 'books',
+        select: ''
+      }
+    ])
   }
 
   async updateBox(id: string, boxData: IBox) {

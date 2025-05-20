@@ -40,7 +40,9 @@ const envSchema = z.object({
   PREMIUM_PRICE_ID: z.string().min(1, 'Premium price ID is required'),
 
   EASYPOST_TEST_API_KEY: z.string().min(1, 'EasyPost test API key is required'),
-  // EASYPOST_LIVE_API_KEY: z.string().min(1, 'EasyPost live API key is required'),
+  // EASYPOST_LIVE_API_KEY: z.string().min(1, 'EasyPost live API key is required'), 
+
+  USPS_RETURN_CARRIER_ID: z.string().min(1, 'USPS return carrier ID is required'),
 });
 
 const envVars = envSchema.parse(process.env);
@@ -81,4 +83,5 @@ export default {
 
   // easypost_live_api_key: envVars.EASYPOST_LIVE_API_KEY,
   easypost_test_api_key: envVars.EASYPOST_TEST_API_KEY,
+  usps_return_carrier_id: envVars.USPS_RETURN_CARRIER_ID,
 };
