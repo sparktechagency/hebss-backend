@@ -5,7 +5,7 @@ import authentication from '../../middlewares/authorization';
 
 const boxRouter = Router();
 
-boxRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
+// boxRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
 
 boxRouter.post('/create', BoxController.createBox);
 boxRouter.get('/retrieve', BoxController.getBoxes);

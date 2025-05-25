@@ -5,7 +5,7 @@ import authentication from '../../middlewares/authorization';
 
 const bookRouter = Router();
 
-bookRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
+// bookRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
 
 bookRouter.post('/create', BookController.createBook);
 bookRouter.get('/retrieve', BookController.getBooks);
