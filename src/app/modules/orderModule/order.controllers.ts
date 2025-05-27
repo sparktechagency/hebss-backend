@@ -78,6 +78,7 @@ class OrderController {
 
   initiateOrderPayment = asyncHandler(async (req: Request, res: Response) => {
     const { items, shippingCost, customerEmail } = req.body;
+    const { purpose } = req.query;
 
     if (!items || items.length === 0) {
       throw new CustomError.BadRequestError('No items in the order.');
@@ -125,13 +126,14 @@ class OrderController {
         quantity: 1,
       });
     }
+    // console.log(purpose)
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: lineItems,
       mode: 'payment',
       customer_email: customerEmail,
-      success_url: `${config.frontend_url}/success?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${config.frontend_url}/success?session_id={CHECKOUT_SESSION_ID}&purpose=${purpose}`,
       cancel_url: `${config.frontend_url}/cancel`,
     });
 

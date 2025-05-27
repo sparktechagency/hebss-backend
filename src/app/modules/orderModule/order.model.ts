@@ -41,6 +41,8 @@ const orderSchema = new mongoose.Schema<IOrder>({
   returnLabelUrl: { type: String},
   returnTrackingCode: { type: String},
   trackingUrl: { type: String},
+}, {
+  timestamps: true
 });
 
 orderSchema.index({ orderId: 'text' });

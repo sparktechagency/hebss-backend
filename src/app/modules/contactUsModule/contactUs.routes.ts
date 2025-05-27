@@ -4,10 +4,10 @@ import authorization from '../../middlewares/authorization';
 
 const contactUsRouter = express.Router();
 
-contactUsRouter.post('/create-or-update', authorization('super-admin', 'admin'), contactUsControllers.createOrUpdateContactUs);
+contactUsRouter.post('/create-or-update', contactUsControllers.createOrUpdateContactUs);
 
-contactUsRouter.get('/retrive', authorization('super-admin', 'admin'), contactUsControllers.getContactUs);
+contactUsRouter.get('/retrive', contactUsControllers.getContactUs);
 
-contactUsRouter.post('/send-email', authorization('super-admin', 'admin', 'patient', 'therapist'), contactUsControllers.sendMailToContactUs);
+contactUsRouter.post('/send-email', contactUsControllers.sendMailToContactUs);
 
 export default contactUsRouter;

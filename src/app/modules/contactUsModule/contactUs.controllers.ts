@@ -45,7 +45,7 @@ const getContactUs = asyncHandler(async (req: Request, res: Response) => {
 
 // controller for send mail to contactus email
 const sendMailToContactUs = asyncHandler(async (req: Request, res: Response) => {
-  const { firstName, role, subject, message } = req.body;
+  const { firstName, email, subject, message } = req.body;
 
   const contactUs = await contactUsService.getContactUs();
   if (!contactUs) {
@@ -54,7 +54,7 @@ const sendMailToContactUs = asyncHandler(async (req: Request, res: Response) => 
 
   // send verification mail
   const textContent = `
-        ${firstName} send you a mail, see below message
+        ${firstName} email - ${email} send you a mail, see below message
 
         ${message}
         `;

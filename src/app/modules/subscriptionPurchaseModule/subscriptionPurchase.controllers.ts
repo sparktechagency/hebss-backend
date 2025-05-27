@@ -68,6 +68,7 @@ class SubscriptionPurchaseController {
 
     // 1. Create Stripe customer if not exists
     if (!user.stripeCustomerId) {
+      console.log("insite")
       const customer = await stripe.customers.create({
         email: user.email,
         name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
@@ -75,6 +76,8 @@ class SubscriptionPurchaseController {
       user.stripeCustomerId = customer.id;
       await user.save();
     }
+
+    console.log(user.stripeCustomerId)
 
     // 2. Get active subscriptions
     const subscriptions = await stripe.subscriptions.list({

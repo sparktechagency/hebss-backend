@@ -50,6 +50,7 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
         paymentStatus: 'paid',
         isActive: true,
       });
+      console.log("webhook called", subscriptionPurchase)
 
       user.subscription = {
         isActive: true,
