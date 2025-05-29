@@ -16,6 +16,10 @@ class SubscriptionService {
     return await Subscription.findById(id);
   }
 
+  async getSubscriptionByStripeId(priceId: string) {
+    return await Subscription.findOne({ priceId });
+  }
+
   async updateSubscription(id: string, subscriptionData: ISubscription) {
     return await Subscription.findByIdAndUpdate(id, subscriptionData, { new: true });
   }

@@ -6,6 +6,8 @@ import { StatusCodes } from 'http-status-codes';
 import SubscriptionServices from './subscription.services';
 import config from '../../../config';
 import { CURRENCY_ENUM } from '../../../enums/currency';
+import subscriptionPurchaseServices from '../subscriptionPurchaseModule/subscriptionPurchase.services';
+import subscriptionServices from './subscription.services';
 
 class SubscriptionController {
   createSubscription = asyncHandler(async (req: Request, res: Response) => {
@@ -74,7 +76,23 @@ class SubscriptionController {
 
   getSubscriptionById = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const subscription = await SubscriptionServices.getSubscriptionById(id);
+    const subscription: any = await SubscriptionServices.getSubscriptionById(id);
+
+    if (!subscription) {
+      throw new CustomError.NotFoundError('Subscription not found!');
+    }
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      status: 'success',
+      message: 'Subscription retrieved successfully',
+      data: subscription,
+    });
+  });
+
+  getSubscriptionByStripeId = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const subscription = await SubscriptionServices.getSubscriptionByStripeId(id);
 
     if (!subscription) {
       throw new CustomError.NotFoundError('Subscription not found!');

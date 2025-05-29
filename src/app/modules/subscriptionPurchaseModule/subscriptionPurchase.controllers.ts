@@ -11,6 +11,7 @@ import userServices from '../userModule/user.services';
 import sendMail from '../../../utils/sendEmail';
 import { Types } from 'mongoose';
 import Stripe from 'stripe';
+import subscriptionServices from '../subscriptionModule/subscription.services';
 
 const stripe = new Stripe(config.stripe_secret_key as string);
 
@@ -68,7 +69,7 @@ class SubscriptionPurchaseController {
 
     // 1. Create Stripe customer if not exists
     if (!user.stripeCustomerId) {
-      console.log("insite")
+      console.log('insite');
       const customer = await stripe.customers.create({
         email: user.email,
         name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
@@ -77,7 +78,7 @@ class SubscriptionPurchaseController {
       await user.save();
     }
 
-    console.log(user.stripeCustomerId)
+    console.log(user.stripeCustomerId);
 
     // 2. Get active subscriptions
     const subscriptions = await stripe.subscriptions.list({
@@ -168,11 +169,22 @@ class SubscriptionPurchaseController {
     if (!subscriptionPurchases) {
       throw new CustomError.NotFoundError('Subscription purchases not found!');
     }
+    // console.log(subscriptionPurchases)
+    let subscriptonInfo: any = await subscriptionServices.getSubscriptionByStripeId(subscriptionPurchases.subscription.priceId as string);
+    const price = await stripe.prices.retrieve(subscriptionPurchases.subscription.priceId as string);
+    let priceAmount;
+    if (price) {
+      priceAmount = price.unit_amount! / 100;
+    }
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       status: 'success',
       message: 'Subscription purchases retrieved successfully',
-      data: subscriptionPurchases,
+      data: {
+        subscriptionPurchases,
+        subscriptonInfo,
+        priceAmount,
+      },
     });
   });
 

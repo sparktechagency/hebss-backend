@@ -54,7 +54,19 @@ class InvoiceService {
       },
       {
         path: 'box',
-        select: ''
+        select: 'books',
+        populate: {
+          path: 'books',
+          select: 'name'
+        }
+      },
+      {
+        path: 'soldBooks.bookId',
+        select: 'name'
+      },
+      {
+        path: 'extraBooks',
+        select: 'name'
       }
     ]);
   }
