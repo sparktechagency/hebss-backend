@@ -65,7 +65,7 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
         contentId: subscriptionPurchase._id as Types.ObjectId,
       });
 
-      const content = `Congratulations! Your subscription purchase is successful!`;
+      const content = 'Congratulations! Your subscription purchase is successful!';
       await sendMail({
         from: config.gmail_app_user as string,
         to: user.email,

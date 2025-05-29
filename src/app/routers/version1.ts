@@ -25,6 +25,7 @@ import reviewRouter from '../modules/reviewModule/reviewModule.routes';
 import favoriteBookRouter from '../modules/favoriteBookModule/favoriteBook.routes';
 import billingRouter from '../modules/billingModule/billing.routes';
 import dashboardMatrixRouter from '../modules/dashboardMatrixModule/dashboardMatrix.routes';
+import subscriberRouter from '../modules/subscriberModule/subscribe.routes';
 
 const routersVersionOne = express.Router();
 
@@ -54,6 +55,7 @@ routersVersionOne.use('/review', reviewRouter);
 routersVersionOne.use('/favorite-book', favoriteBookRouter);
 routersVersionOne.use('/billing', billingRouter);
 routersVersionOne.use('/dashboard-matrix', dashboardMatrixRouter);
+routersVersionOne.use('/subscriber', subscriberRouter);
 
 // settings
 routersVersionOne.use('/about-us', aboutUsRouter);

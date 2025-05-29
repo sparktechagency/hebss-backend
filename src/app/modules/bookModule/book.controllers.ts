@@ -7,6 +7,9 @@ import { StatusCodes } from 'http-status-codes';
 import fileUploader from '../../../utils/fileUploader';
 import { FileArray } from 'express-fileupload';
 import { CURRENCY_ENUM } from '../../../enums/currency';
+import subscribeServices from '../subscriberModule/subscribe.services';
+import config from '../../../config';
+import sendMail from '../../../utils/sendEmail';
 
 class BookController {
   createBook = asyncHandler(async (req: Request, res: Response) => {
@@ -74,6 +77,26 @@ class BookController {
     if (!newBook) {
       throw new CustomError.BadRequestError('Failed to create book!');
     }
+
+    // send email to subscriber email
+    const subscribers = await subscribeServices.getSubscribers();
+
+    subscribers.map((subscriber) => {
+      const content = `New book is added! Check it out! 
+            
+            Book Link: ${config.frontend_url}/bookStore/${newBook._id}
+            `;
+      // const verificationLink = `${server_base_url}/v1/auth/verify-email/${user._id}?userCode=${userData.verification.code}`
+      // const content = `Click the following link to verify your email: ${verificationLink}`
+      const mailOptions = {
+        from: config.gmail_app_user as string,
+        to: subscriber.email,
+        subject: 'New Book Added',
+        text: content,
+      };
+
+      sendMail(mailOptions);
+    });
 
     sendResponse(res, {
       statusCode: StatusCodes.CREATED,
@@ -223,7 +246,6 @@ class BookController {
       message: 'Book deleted successfully',
     });
   });
-
 }
 
 export default new BookController();
