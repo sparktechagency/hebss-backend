@@ -134,6 +134,10 @@ const getAllPurchedUsers = async () => {
 //   return true;
 // };
 
+const updateShippingAddress = async (id: string, data: Partial<IUser>) => {
+  return await User.findOneAndUpdate({ _id: id }, data);
+};
+
 export default {
   createUser,
   getSpecificUser,
@@ -142,4 +146,5 @@ export default {
   getAllUser,
   getSpecificUserByCustomerId,
   getAllPurchedUsers,
+  updateShippingAddress,
 };

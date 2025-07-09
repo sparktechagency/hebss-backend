@@ -34,6 +34,22 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
     case 'checkout.session.completed': {
       console.log('Checkout session completed');
 
+      if (session.subscription && session.customer) {
+        const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+
+        const defaultPaymentMethod = subscription.default_payment_method;
+
+        if (defaultPaymentMethod) {
+          await stripe.customers.update(session.customer as string, {
+            invoice_settings: {
+              default_payment_method: defaultPaymentMethod.toString(),
+            },
+          });
+
+          user.stripePaymentMethodId = defaultPaymentMethod.toString();
+        }
+      }
+
       const subscriptionId = session.subscription as string;
 
       // Retrieve full subscription to get the priceId
@@ -50,7 +66,7 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
         paymentStatus: 'paid',
         isActive: true,
       });
-      console.log("webhook called", subscriptionPurchase)
+      console.log('webhook called', subscriptionPurchase);
 
       user.subscription = {
         isActive: true,

@@ -28,6 +28,14 @@ interface IUser extends Document {
     isActive: boolean;
   }
   stripeCustomerId?: string;
+  stripePaymentMethodId?: string;
+  shippingAddress: {
+    state: string;
+    street: string;
+    city: string;
+    country: string;
+    zipCode: string;
+  };
 
   // method declarations
   comparePassword(userPlanePassword: string): boolean

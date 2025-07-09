@@ -58,7 +58,7 @@ class SubscriptionPurchaseController {
   //   });
   // });
   createSubscriptionPurchase = asyncHandler(async (req: Request, res: Response) => {
-    const { userId, priceId } = req.body;
+    const { userId, priceId, toAddress } = req.body;
 
     if (!userId || !priceId) {
       throw new CustomError.BadRequestError('Missing required fields!');
@@ -69,13 +69,13 @@ class SubscriptionPurchaseController {
 
     // 1. Create Stripe customer if not exists
     if (!user.stripeCustomerId) {
-      console.log('insite');
+      // console.log('insite');
       const customer = await stripe.customers.create({
         email: user.email,
         name: `${user.firstName || ''} ${user.lastName || ''}`.trim(),
       });
       user.stripeCustomerId = customer.id;
-      await user.save();
+      // await user.save();
     }
 
     console.log(user.stripeCustomerId);
@@ -137,6 +137,9 @@ class SubscriptionPurchaseController {
       success_url: `${config.frontend_url}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${config.frontend_url}/cancel`,
     });
+
+    user.shippingAddress = toAddress;
+    await user.save();
 
     return sendResponse(res, {
       statusCode: StatusCodes.OK,

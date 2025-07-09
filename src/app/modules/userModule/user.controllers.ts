@@ -199,6 +199,23 @@ const sendEmailToAllUsers = asyncHandler(async (req: Request, res: Response) => 
   });
 });
 
+// controller for update shipping address
+const updateShippingAddress = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const shippingAddress = req.body;
+
+  const updatedUser = await userServices.updateShippingAddress(id, shippingAddress);
+  if (!updatedUser?.isModified) {
+    throw new CustomError.BadRequestError('Failed to update shipping address!');
+  }
+
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    status: 'success',
+    message: 'Shipping address updated successfully',
+  });
+});
+
 export default {
   createUser,
   getSpecificUser,
@@ -208,4 +225,5 @@ export default {
   // changeUserProfileImage,
   sendEmailToSpecificUser,
   sendEmailToAllUsers,
+  updateShippingAddress,
 };

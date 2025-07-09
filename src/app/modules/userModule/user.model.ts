@@ -93,6 +93,17 @@ const userSchema = new mongoose.Schema<IUser>(
       type: String,
       default: null,
     },
+    stripePaymentMethodId: {
+      type: String,
+      default: null,
+    },
+    shippingAddress: {
+      state: String,
+      street: String,
+      city: String,
+      country: String,
+      zipCode: String,
+    },
   },
   {
     timestamps: true,

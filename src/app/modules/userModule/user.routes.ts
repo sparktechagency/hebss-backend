@@ -32,4 +32,7 @@ userRouter.post('/send-email/indivisual/:id', requestValidator(UserValidationZod
 // send email to all users
 userRouter.post('/send-email/bulk', userControllers.sendEmailToAllUsers);
 
+// update shipping address
+userRouter.patch('/update/shipping-address/:id', requestValidator(UserValidationZodSchema.getSpecificUserZodSchema), userControllers.updateShippingAddress);
+
 export default userRouter;

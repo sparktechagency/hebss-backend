@@ -76,7 +76,16 @@ class InvoiceService {
   }
 
   async getInvoiceById(id: string) {
-    return await Invoice.findById(id);
+    return await Invoice.findById(id).populate([
+      {
+        path: 'soldBooks.bookId',
+        select: 'name price'
+      },
+      {
+        path: 'extraBooks',
+        select: 'name'
+      }
+    ]);
   }
 
   async getLastInvoice() {
