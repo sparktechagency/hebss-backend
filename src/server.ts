@@ -16,6 +16,10 @@ cron.schedule('0 0 1 * *', async () => {
   await invoiceServices.createInvoice();
   console.log('Invoice created successfully');
 });
+// cron.schedule('* * * * *', async () => {
+//   await invoiceServices.createInvoice();
+//   console.log('Invoice created successfully');
+// });
 
 const startServer = async () => {
   await mongoose.connect(config.mongodb_url as string);
