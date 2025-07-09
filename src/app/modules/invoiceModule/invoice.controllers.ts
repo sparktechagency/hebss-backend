@@ -10,6 +10,7 @@ import bookServices from '../bookModule/book.services';
 import Stripe from 'stripe';
 import config from '../../../config';
 import userServices from '../userModule/user.services';
+import sendMail from '../../../utils/sendEmail';
 
 const stripe = new Stripe(config.stripe_secret_key as string);
 
@@ -187,6 +188,15 @@ class InvoiceController {
     } else {
       throw new CustomError.BadRequestError('Payment failed. Try again!');
     }
+
+    // send email to user
+    const content = `Your invoice payment has been completed successfully!`;
+    await sendMail({
+      from: config.gmail_app_user as string,
+      to: user.email,
+      subject: 'Illuminate Muslim Minds - Invoice Payment',
+      text: content,
+    });
 
     sendResponse(res, {
       statusCode: StatusCodes.OK,
