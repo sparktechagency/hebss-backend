@@ -5,7 +5,7 @@ import authentication from '../../middlewares/authorization';
 
 const recommendationRouter = express.Router();
 
-recommendationRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
+// recommendationRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
 
 recommendationRouter.post('/create', recommendationControllers.createRecommendation);
 recommendationRouter.get('/retrieve/:dateOfBirth', recommendationControllers.getRecommendationByCategory);
