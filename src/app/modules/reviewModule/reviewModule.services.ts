@@ -32,7 +32,7 @@ class ReviewServices {
         { comment: { $regex: search, $options: 'i' } },
       ];
     }
-    return await Review.find(query).skip(skip).limit(limit);
+    return await Review.find(query).populate('user', 'firstName lastName email phone').skip(skip).limit(limit);
   }
 
   async countReviews() {
