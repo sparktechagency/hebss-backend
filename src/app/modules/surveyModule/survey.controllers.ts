@@ -9,6 +9,7 @@ import userServices from '../userModule/user.services';
 import IUser from '../userModule/user.interface';
 import { Types } from 'mongoose';
 import { calculateAge } from '../../../utils/calculateAge';
+import surveyServices from './survey.services';
 
 const createSurvey = asyncHandler(async (req: Request, res: Response) => {
   const surveyData = req.body;
@@ -69,6 +70,22 @@ const createSurvey = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
+const getSurveyById = asyncHandler(async (req: Request, res: Response) => {
+  const {id} = req.params;
+  const survey = await surveyServices.getSurveyById(id);
+  if(!survey){
+    throw new CustomError.BadRequestError("Survey not found!");
+  }
+
+  sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      status: 'success',
+      message: 'Survey retrieve successfully',
+      data: survey,
+    });
+})
+
 export default {
   createSurvey,
+  getSurveyById
 };

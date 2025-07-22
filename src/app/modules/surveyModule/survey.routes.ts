@@ -5,8 +5,9 @@ import authentication from '../../middlewares/authorization';
 
 const surveyRouter = express.Router();
 
-surveyRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
+// surveyRouter.use(authentication(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.SUPER_ADMIN, ENUM_USER_ROLE.USER))
 
 surveyRouter.post('/create', SurveyControllers.createSurvey);
+surveyRouter.get('/retrieve/:id', SurveyControllers.getSurveyById);
 
 export default surveyRouter;
