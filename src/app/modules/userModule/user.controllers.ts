@@ -9,6 +9,7 @@ import jwtHelpers from '../../../healpers/healper.jwt';
 import config from '../../../config';
 import asyncHandler from '../../../shared/asyncHandler';
 import referralCodeServices from '../referralCodeModule/refarralCode.services';
+import surveyServices from '../surveyModule/survey.services';
 
 // controller for create new user
 const createUser = asyncHandler(async (req: Request, res: Response) => {
@@ -33,6 +34,13 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     };
     accessToken = jwtHelpers.createToken(payload, config.jwt_access_token_secret as string, config.jwt_access_token_expiresin as string);
     refreshToken = jwtHelpers.createToken(payload, config.jwt_refresh_token_secret as string, config.jwt_refresh_token_expiresin as string);
+  }
+
+  if(userData.survey){
+    const survey = await surveyServices.getSurveyById(userData.survey)
+    if(!survey){
+      throw new CustomError.BadRequestError("Survey not found")
+    }
   }
 
   const user = await userServices.createUser(userData);
