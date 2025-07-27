@@ -5,7 +5,7 @@ const createBilling = async (billinData: any) => {
 };
 
 const getBillings = async (userId: string,skip: number, limit: number) => {
-  return await Billing.find({user: userId}).skip(skip).limit(limit).populate('contentId');
+  return await Billing.find({user: userId}).populate('contentId');
 };
 
 export default {

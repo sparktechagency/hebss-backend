@@ -232,6 +232,9 @@ class SubscriptionPurchaseController {
       }),
     );
 
+    subscriptionPurchase.disableRequest = true;
+    await subscriptionPurchase.save();
+
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       status: 'success',

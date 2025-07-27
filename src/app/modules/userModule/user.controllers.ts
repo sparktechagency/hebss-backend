@@ -23,6 +23,11 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     expireDate,
   };
 
+  // parse shippingAddress
+  if (userData.shippingAddress) {
+    userData.shippingAddress = JSON.parse(userData.shippingAddress);
+  }
+
   // token for social user
   let accessToken, refreshToken;
   if (userData.isSocial) {

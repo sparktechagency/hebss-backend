@@ -8,7 +8,7 @@ class SurveyService {
   }
 
   async getSurveyById(id: string) {
-    return await Survey.findById(id);
+    return await Survey.findOne({email: id});
   }
 
 }
