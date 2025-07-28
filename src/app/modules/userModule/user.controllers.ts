@@ -43,9 +43,9 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
 
   if(userData.survey){
     const survey = await surveyServices.getSurveyById(userData.survey)
-    if(!survey){
-      throw new CustomError.BadRequestError("Survey not found")
-    }
+    // if(!survey){
+    //   throw new CustomError.BadRequestError("Survey not found")
+    // }
   }
 
   const user = await userServices.createUser(userData);
@@ -69,6 +69,8 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
 
     sendMail(mailOptions);
   }
+
+  // create invoice for fresh
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
