@@ -52,8 +52,10 @@ const createSurvey = asyncHandler(async (req: Request, res: Response) => {
 
   try {
     const newSurvey = await Survey.create([surveyData], { session });
-    user.survey = newSurvey[0]._id as Types.ObjectId;
-    await user.save({ session });
+    if(user){
+      user.survey = newSurvey[0]._id as Types.ObjectId;
+      await user.save({ session });
+    }
     await session.commitTransaction();
 
     sendResponse(res, {

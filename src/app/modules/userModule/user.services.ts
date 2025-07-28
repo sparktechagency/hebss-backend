@@ -39,7 +39,7 @@ const getAllUser = async (query: string): Promise<IUser[]> => {
       path: 'survey',
       select: '',
     })
-    .select('-password -verification');
+    .select('-password -verification').sort({ createdAt: -1 });
 };
 
 // service for get specific user
