@@ -42,9 +42,9 @@ const createSurvey = asyncHandler(async (req: Request, res: Response) => {
   }
 
   const user: IUser = await userServices.getSpecificUserByEmail(surveyData.email);
-  if (!user) {
-    throw new CustomError.BadRequestError('User not found!');
-  }
+  // if (!user) {
+  //   throw new CustomError.BadRequestError('User not found!');
+  // }
 
   // Use transaction for multiple database operations
   const session = await Survey.startSession();
