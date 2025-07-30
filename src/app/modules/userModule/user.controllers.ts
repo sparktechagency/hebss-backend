@@ -10,6 +10,7 @@ import config from '../../../config';
 import asyncHandler from '../../../shared/asyncHandler';
 import referralCodeServices from '../referralCodeModule/refarralCode.services';
 import surveyServices from '../surveyModule/survey.services';
+import invoiceServices from '../invoiceModule/invoice.services';
 
 // controller for create new user
 const createUser = asyncHandler(async (req: Request, res: Response) => {
@@ -70,7 +71,8 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     sendMail(mailOptions);
   }
 
-  // create invoice for fresh
+  // create invoice for fresh user
+  await invoiceServices.createInvoiceForSingleUser(user._id as string);
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,
@@ -145,6 +147,11 @@ const updateSpecificUser = asyncHandler(async (req: Request, res: Response) => {
 
   if (userData.password || userData.email || userData.isEmailVerified) {
     throw new CustomError.BadRequestError("You can't update email, verified status and password directly!");
+  }
+
+  // parse shippingAddress
+  if (userData.shippingAddress) {
+    userData.shippingAddress = JSON.parse(userData.shippingAddress);
   }
 
   const updatedUser = await userServices.updateSpecificUser(id, userData);

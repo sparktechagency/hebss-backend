@@ -19,6 +19,10 @@ class BoxService {
     return await Box.find({ category: categoryId });
   }
 
+  async getBoxByUserId(userId: string) {
+    return await Box.findOne({ user: userId });
+  }
+
   async getSpecificBoxByCategoryId(categoryId: string) {
     return await Box.findOne({ category: categoryId }).populate([
       {
