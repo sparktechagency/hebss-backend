@@ -133,6 +133,9 @@ class OrderController {
       line_items: lineItems,
       mode: 'payment',
       customer_email: customerEmail,
+      shipping_address_collection: {
+        allowed_countries: ['US','BD'], // collect shipping address
+      },
       success_url: `${config.frontend_url}/success?session_id={CHECKOUT_SESSION_ID}&purpose=${purpose}`,
       cancel_url: `${config.frontend_url}/cancel`,
     });
@@ -150,8 +153,11 @@ class OrderController {
 
     // 1. Retrieve Stripe session
     const session: any = await stripe.checkout.sessions.retrieve(orderData.sessionId, {
-      expand: ['line_items', 'payment_intent'],
+      expand: ['line_items', 'payment_intent', 'shipping_details'],
     });
+
+    console.log("Shipping Address:", session.shipping_details);
+
 
     if (!session || session.payment_status !== 'paid') {
       throw new CustomError.BadRequestError('Payment not completed or session not found.');
@@ -186,6 +192,13 @@ class OrderController {
       total: {
         amount: totalAmount,
         currency: session.currency!,
+      },
+      shippingAddress: {
+        state: session.shipping_details?.address?.state || 'N/A',
+        street: session.shipping_details?.address?.line1 || 'N/A',
+        city: session.shipping_details?.address?.city || 'N/A',
+        country: session.shipping_details?.address?.country || 'N/A',
+        zipCode: session.shipping_details?.address?.postal_code || 'N/A',
       },
       paymentInfo: {
         type: 'card',

@@ -31,6 +31,13 @@ const orderSchema = new mongoose.Schema<IOrder>({
     amount: { type: Number, required: true },
     currency: { type: String, required: true },
   },
+   shippingAddress: {
+    state: String,
+    street: String,
+    city: String,
+    country: String,
+    zipCode: String,
+  },
   status: { type: String, enum: ['pending', 'shipped', 'delivered', 'failed'], default: 'pending' },
   paymentInfo: {
     type: { type: String, enum: ['cash', 'card', 'online'], default: 'cash' },
