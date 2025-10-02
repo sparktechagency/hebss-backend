@@ -13,8 +13,8 @@ class OrderService {
       if (searchTerm) {
         search.$text = { $search: searchTerm };
       }
-    console.log(search)
-      return await Order.find(search).skip(skip).limit(limit);
+    // console.log(search)
+      return await Order.find(search).sort('-updatedAt').skip(skip).limit(limit);
     }
     async countOrders() {
       return await Order.countDocuments();
