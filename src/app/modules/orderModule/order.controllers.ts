@@ -153,10 +153,10 @@ class OrderController {
 
     // 1. Retrieve Stripe session
     const session: any = await stripe.checkout.sessions.retrieve(orderData.sessionId, {
-      expand: ['line_items', 'payment_intent', 'shipping_details'],
+      expand: ['line_items', 'payment_intent'],
     });
 
-    console.log("Shipping Address:", session.shipping_details);
+    console.log("Shipping Address:", session.shipping);
 
 
     if (!session || session.payment_status !== 'paid') {
@@ -194,11 +194,11 @@ class OrderController {
         currency: session.currency!,
       },
       shippingAddress: {
-        state: session.shipping_details?.address?.state || 'N/A',
-        street: session.shipping_details?.address?.line1 || 'N/A',
-        city: session.shipping_details?.address?.city || 'N/A',
-        country: session.shipping_details?.address?.country || 'N/A',
-        zipCode: session.shipping_details?.address?.postal_code || 'N/A',
+        state: session.shipping?.address?.state || 'N/A',
+        street: session.shipping?.address?.line1 || 'N/A',
+        city: session.shipping?.address?.city || 'N/A',
+        country: session.shipping?.address?.country || 'N/A',
+        zipCode: session.shipping?.address?.postal_code || 'N/A',
       },
       paymentInfo: {
         type: 'card',
