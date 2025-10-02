@@ -72,7 +72,21 @@ class BookController {
       }
     }
 
+      // Discount Price: If discountPriceAmount is provided, set discount price
+      if (bookData.isDiscount) {
+        if (bookData.discountAmount) {
+          bookData.discountPrice = {
+            type: bookData.discountType,
+            amount: Number(bookData.discountAmount),
+            currency: CURRENCY_ENUM.USD,
+          };
+        } else {
+          throw new CustomError.BadRequestError('Discount type and discount amount is required while isDiscount is true');
+        }
+      }
+
     const newBook = await BookServices.createBook(bookData);
+    
 
     if (!newBook) {
       throw new CustomError.BadRequestError('Failed to create book!');
