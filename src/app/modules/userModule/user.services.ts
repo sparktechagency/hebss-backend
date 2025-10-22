@@ -38,6 +38,10 @@ const getAllUser = async (query: string): Promise<IUser[]> => {
     .populate({
       path: 'survey',
       select: '',
+      populate: {
+        path: 'category',
+        select: 'title',
+      },
     })
     .select('-password -verification').sort({ createdAt: -1 });
 };

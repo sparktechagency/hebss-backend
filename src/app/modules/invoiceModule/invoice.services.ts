@@ -39,11 +39,13 @@ class InvoiceService {
 
   async createInvoiceForSingleUser(userId: string) {
     const user = await userServices.getSpecificUser(userId);
+    console.log(user)
     if (!user) {
       throw new CustomError.NotFoundError('User not found!');
     }
 
     const subscriptionPurchaseByUser = await subscriptionPurchaseServices.getSubscriptionPurchaseByUserId(userId);
+    console.log(subscriptionPurchaseByUser)
     if (subscriptionPurchaseByUser) {
       const box = await boxServices.getBoxByUserId(userId);
 

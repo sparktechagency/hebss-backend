@@ -72,7 +72,8 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
   }
 
   // create invoice for fresh user
-  await invoiceServices.createInvoiceForSingleUser(user._id as string);
+  const invoice = await invoiceServices.createInvoiceForSingleUser(user._id as string);
+  console.log(invoice)
 
   sendResponse(res, {
     statusCode: StatusCodes.CREATED,

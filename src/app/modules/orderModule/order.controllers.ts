@@ -194,7 +194,7 @@ class OrderController {
         currency: session.currency!,
       },
       shippingAddress: {
-        state: session.shipping?.address?.state || 'N/A',
+        state: session.shipping?.address?.state || 'N/A, Will come letter',
         street: session.shipping?.address?.line1 || 'N/A',
         city: session.shipping?.address?.city || 'N/A',
         country: session.shipping?.address?.country || 'N/A',
