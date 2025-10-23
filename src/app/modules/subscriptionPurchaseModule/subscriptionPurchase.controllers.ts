@@ -12,6 +12,8 @@ import sendMail from '../../../utils/sendEmail';
 import { Types } from 'mongoose';
 import Stripe from 'stripe';
 import subscriptionServices from '../subscriptionModule/subscription.services';
+import invoiceServices from '../invoiceModule/invoice.services';
+import { CURRENCY_ENUM } from '../../../enums/currency';
 
 const stripe = new Stripe(config.stripe_secret_key as string);
 
@@ -78,7 +80,7 @@ class SubscriptionPurchaseController {
       // await user.save();
     }
 
-    console.log(user.stripeCustomerId);
+    // console.log(user.stripeCustomerId);
 
     // 2. Get active subscriptions
     const subscriptions = await stripe.subscriptions.list({
@@ -112,6 +114,12 @@ class SubscriptionPurchaseController {
           },
         ],
       });
+
+      // check the user exist active invoice, if not then create new invoice
+      const invoice = await invoiceServices.getActiveInvoiceByUserId(userId);
+      if (!invoice) {
+        await invoiceServices.createInvoiceForSingleUser(userId);
+      }
 
       return sendResponse(res, {
         statusCode: StatusCodes.OK,
