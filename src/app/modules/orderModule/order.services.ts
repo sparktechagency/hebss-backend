@@ -14,7 +14,10 @@ class OrderService {
         search.$text = { $search: searchTerm };
       }
     // console.log(search)
-      return await Order.find(search).sort('-updatedAt').skip(skip).limit(limit);
+      return await Order.find(search).sort('-updatedAt').skip(skip).limit(limit).populate({
+        path: 'items.itemId',
+        select: 'name price coverImage',
+      });
     }
     async countOrders() {
       return await Order.countDocuments();
