@@ -6,6 +6,8 @@ import Invoice from './invoice.model';
 import CustomError from '../../errors';
 import subscriptionPurchaseServices from '../subscriptionPurchaseModule/subscriptionPurchase.services';
 import boxServices from '../boxModule/box-services';
+import surveyServices from '../surveyModule/survey.services';
+import { ObjectId } from 'mongoose';
 
 class InvoiceService {
   async createInvoice() {
@@ -47,7 +49,8 @@ class InvoiceService {
     const subscriptionPurchaseByUser = await subscriptionPurchaseServices.getSubscriptionPurchaseByUserId(userId);
     // console.log(subscriptionPurchaseByUser)
     if (subscriptionPurchaseByUser) {
-      const box = await boxServices.getBoxByUserId(userId);
+      const survey = await surveyServices.getSurveyById(user.survey as unknown as ObjectId)
+      const box = await boxServices.getBoxByCategoryId(survey?.category as unknown as ObjectId);
 
       if (box) {
         const lastInvoice = await this.getLastInvoice();

@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongoose';
 import { ISurvey } from './survey.interface';
 import Survey from './survey.model';
 
@@ -7,9 +8,13 @@ class SurveyService {
     return await survey.save();
   }
 
-  async getSurveyById(id: string) {
+  async getSurveyById(id: ObjectId) {
     return await Survey.findOne({email: id});
   }
+
+  // async getSurveyByUserId(id: string) {
+  //   return await Survey.findOne({user: id});
+  // }
 
 }
 

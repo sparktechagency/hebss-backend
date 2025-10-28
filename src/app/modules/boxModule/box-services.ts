@@ -1,3 +1,4 @@
+import { ObjectId } from 'mongoose';
 import { IBox } from './box-interface';
 import Box from './box.model';
 
@@ -15,8 +16,11 @@ class BoxService {
     return await Box.findById(id);
   }
 
-  async getBoxesByCategoryId(categoryId: string) {
+  async getBoxesByCategoryId(categoryId: ObjectId) {
     return await Box.find({ category: categoryId });
+  }
+  async getBoxByCategoryId(categoryId: ObjectId) {
+    return await Box.findOne({ category: categoryId });
   }
 
   async getBoxByUserId(userId: string) {
