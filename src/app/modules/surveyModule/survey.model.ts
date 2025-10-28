@@ -34,7 +34,7 @@ const surveySchema = new mongoose.Schema<ISurvey>(
         values: ['Beginner', 'Intermediate', 'Advanced'],
         message: '{VALUE} is not accepted as a lavel value. Use Beginner/Intermediate/Advanced.',
       },
-      required: true,
+      // required: true,
     },
     costSpend: {
       statement: {
