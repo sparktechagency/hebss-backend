@@ -28,6 +28,9 @@ const survey_routes_1 = __importDefault(require("../modules/surveyModule/survey.
 const recommendation_routes_1 = __importDefault(require("../modules/recommendationModule/recommendation.routes"));
 const reviewModule_routes_1 = __importDefault(require("../modules/reviewModule/reviewModule.routes"));
 const favoriteBook_routes_1 = __importDefault(require("../modules/favoriteBookModule/favoriteBook.routes"));
+const billing_routes_1 = __importDefault(require("../modules/billingModule/billing.routes"));
+const dashboardMatrix_routes_1 = __importDefault(require("../modules/dashboardMatrixModule/dashboardMatrix.routes"));
+const subscribe_routes_1 = __importDefault(require("../modules/subscriberModule/subscribe.routes"));
 const routersVersionOne = express_1.default.Router();
 // user
 routersVersionOne.use('/user', user_routes_1.default);
@@ -51,6 +54,9 @@ routersVersionOne.use('/survey', survey_routes_1.default);
 routersVersionOne.use('/recommendation', recommendation_routes_1.default);
 routersVersionOne.use('/review', reviewModule_routes_1.default);
 routersVersionOne.use('/favorite-book', favoriteBook_routes_1.default);
+routersVersionOne.use('/billing', billing_routes_1.default);
+routersVersionOne.use('/dashboard-matrix', dashboardMatrix_routes_1.default);
+routersVersionOne.use('/subscriber', subscribe_routes_1.default);
 // settings
 routersVersionOne.use('/about-us', abountUs_routes_1.default);
 routersVersionOne.use('/privacy-policy', privacyPolicy_routes_1.default);

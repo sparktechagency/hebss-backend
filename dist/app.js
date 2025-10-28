@@ -19,7 +19,10 @@ const errors_1 = __importDefault(require("./app/errors"));
 const rootDesign_1 = __importDefault(require("./app/middlewares/rootDesign"));
 const passport_1 = __importDefault(require("./config/passport"));
 const express_session_1 = __importDefault(require("express-session"));
+const webhook_stripe_1 = require("./app/webhooks/webhook.stripe");
 const app = (0, express_1.default)();
+// stripe webhook
+app.post('/webhook/stripe', express_1.default.raw({ type: 'application/json' }), webhook_stripe_1.stripeWebhookHandler);
 // global middlewares
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());

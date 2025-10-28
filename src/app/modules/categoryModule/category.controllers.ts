@@ -5,7 +5,7 @@ import CustomError from '../../errors';
 import sendResponse from '../../../shared/sendResponse';
 import { StatusCodes } from 'http-status-codes';
 import BoxServices from '../boxModule/box-services';
-
+import { ObjectId } from 'mongoose';
 class CategoryController {
   createCategory = asyncHandler(async (req: Request, res: Response) => {
     const categoryData = req.body;
@@ -54,7 +54,7 @@ class CategoryController {
     const categoryData = req.body;
 
     if (categoryData.title) {
-      const box: any = await BoxServices.getBoxesByCategoryId(id);
+      const box: any = await BoxServices.getBoxesByCategoryId(id as unknown as ObjectId);
       if (box) {
         box.title = categoryData.title;
         await box.save();

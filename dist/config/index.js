@@ -28,6 +28,14 @@ const envSchema = zod_1.z.object({
     GOOGLE_CALLBACK_URL: zod_1.z.string().min(1, 'Google callback URL is required'),
     FACEBOOK_REDIRECT_URL: zod_1.z.string().min(1, 'Facebook redirect URL is required'),
     FRONTEND_URL: zod_1.z.string().min(1, 'Frontend URL is required'),
+    STRIPE_SECRET_KEY: zod_1.z.string().min(1, 'Stripe secret key is required'),
+    STRIPE_WEBHOOK_SECRET: zod_1.z.string().min(1, 'Stripe webhook secret is required'),
+    BASIC_PRICE_ID: zod_1.z.string().min(1, 'Basic price ID is required'),
+    STANDARD_PRICE_ID: zod_1.z.string().min(1, 'Standard price ID is required'),
+    PREMIUM_PRICE_ID: zod_1.z.string().min(1, 'Premium price ID is required'),
+    EASYPOST_TEST_API_KEY: zod_1.z.string().min(1, 'EasyPost test API key is required'),
+    // EASYPOST_LIVE_API_KEY: z.string().min(1, 'EasyPost live API key is required'), 
+    USPS_RETURN_CARRIER_ID: zod_1.z.string().min(1, 'USPS return carrier ID is required'),
 });
 const envVars = envSchema.parse(process.env);
 exports.default = {
@@ -50,4 +58,12 @@ exports.default = {
     google_callback_url: envVars.GOOGLE_CALLBACK_URL,
     facebook_redirect_url: envVars.FACEBOOK_REDIRECT_URL,
     frontend_url: envVars.FRONTEND_URL,
+    stripe_secret_key: envVars.STRIPE_SECRET_KEY,
+    stripe_webhook_secret: envVars.STRIPE_WEBHOOK_SECRET,
+    basic_price_id: envVars.BASIC_PRICE_ID,
+    standard_price_id: envVars.STANDARD_PRICE_ID,
+    premium_price_id: envVars.PREMIUM_PRICE_ID,
+    // easypost_live_api_key: envVars.EASYPOST_LIVE_API_KEY,
+    easypost_test_api_key: envVars.EASYPOST_TEST_API_KEY,
+    usps_return_carrier_id: envVars.USPS_RETURN_CARRIER_ID,
 };

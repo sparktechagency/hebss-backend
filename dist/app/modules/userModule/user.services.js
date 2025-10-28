@@ -26,6 +26,14 @@ const getSpecificUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     })
         .select('-password -verification');
 });
+const getSpecificUserByCustomerId = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield user_model_1.default.findOne({ stripeCustomerId: id })
+        .populate({
+        path: 'survey',
+        select: '',
+    })
+        .select('-password -verification');
+});
 // service for get specific user
 const getAllUser = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const matchCondition = {};
@@ -36,8 +44,12 @@ const getAllUser = (query) => __awaiter(void 0, void 0, void 0, function* () {
         .populate({
         path: 'survey',
         select: '',
+        populate: {
+            path: 'category',
+            select: 'title',
+        },
     })
-        .select('-password -verification');
+        .select('-password -verification').sort({ createdAt: -1 });
 });
 // service for get specific user
 const getSpecificUserByEmail = (email) => __awaiter(void 0, void 0, void 0, function* () {
@@ -52,6 +64,63 @@ const getSpecificUserByEmail = (email) => __awaiter(void 0, void 0, void 0, func
 const updateSpecificUser = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
     return yield user_model_1.default.findOneAndUpdate({ _id: id }, data);
 });
+const getAllPurchedUsers = () => __awaiter(void 0, void 0, void 0, function* () {
+    const users = yield user_model_1.default.aggregate([
+        // 1. Filter active users with required fields
+        {
+            $match: {
+                status: 'active',
+                'subscription.isActive': true,
+                'subscription.purchaseId': { $ne: null },
+                stripeCustomerId: { $ne: null },
+            },
+        },
+        // 2. Lookup related survey
+        {
+            $lookup: {
+                from: 'surveys',
+                localField: '_id',
+                foreignField: 'user',
+                as: 'survey',
+            },
+        },
+        // 3. Unwind the survey array (get single survey)
+        {
+            $unwind: {
+                path: '$survey',
+                preserveNullAndEmptyArrays: true, // keep user even if no survey
+            },
+        },
+        // 4. Lookup box using survey.category
+        {
+            $lookup: {
+                from: 'boxes',
+                localField: 'survey.category',
+                foreignField: 'category',
+                as: 'box',
+            },
+        },
+        // 5. Unwind the box array
+        {
+            $unwind: {
+                path: '$box',
+                preserveNullAndEmptyArrays: true,
+            },
+        },
+        // 6. Final output structure
+        {
+            $project: {
+                name: 1,
+                email: 1,
+                stripeCustomerId: 1,
+                subscription: 1,
+                survey: 1,
+                boxId: '$box._id',
+            },
+        },
+    ]);
+    return users;
+});
 // service for delete specific user
 // const deleteSpecificUser = async (id: string, role: string) => {
 //   await User.deleteOne({ _id: id });
@@ -64,11 +133,16 @@ const updateSpecificUser = (id, data) => __awaiter(void 0, void 0, void 0, funct
 //   }
 //   return true;
 // };
+const updateShippingAddress = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    return yield user_model_1.default.findOneAndUpdate({ _id: id }, data);
+});
 exports.default = {
     createUser,
     getSpecificUser,
     getSpecificUserByEmail,
     updateSpecificUser,
-    // deleteSpecificUser,
     getAllUser,
+    getSpecificUserByCustomerId,
+    getAllPurchedUsers,
+    updateShippingAddress,
 };

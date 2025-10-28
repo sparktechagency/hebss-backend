@@ -7,7 +7,7 @@ import CustomError from '../../errors';
 import { getCategoryByAge, parseCostStatement } from './survey.utils';
 import userServices from '../userModule/user.services';
 import IUser from '../userModule/user.interface';
-import { Types } from 'mongoose';
+import { ObjectId, Types } from 'mongoose';
 import { calculateAge } from '../../../utils/calculateAge';
 import surveyServices from './survey.services';
 
@@ -74,7 +74,7 @@ const createSurvey = asyncHandler(async (req: Request, res: Response) => {
 
 const getSurveyById = asyncHandler(async (req: Request, res: Response) => {
   const {id} = req.params;
-  const survey = await surveyServices.getSurveyById(id);
+  const survey = await surveyServices.getSurveyById(id as unknown as ObjectId);
   if(!survey){
     throw new CustomError.BadRequestError("Survey not found!");
   }

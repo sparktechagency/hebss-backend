@@ -32,6 +32,8 @@ const sendEmail_1 = __importDefault(require("../../../utils/sendEmail"));
 const healper_jwt_1 = __importDefault(require("../../../healpers/healper.jwt"));
 const config_1 = __importDefault(require("../../../config"));
 const asyncHandler_1 = __importDefault(require("../../../shared/asyncHandler"));
+const survey_services_1 = __importDefault(require("../surveyModule/survey.services"));
+const invoice_services_1 = __importDefault(require("../invoiceModule/invoice.services"));
 // controller for create new user
 const createUser = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
@@ -42,6 +44,10 @@ const createUser = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, v
         code: IdGenerator_1.default.generateNumberId(),
         expireDate,
     };
+    // parse shippingAddress
+    if (userData.shippingAddress) {
+        userData.shippingAddress = JSON.parse(userData.shippingAddress);
+    }
     // token for social user
     let accessToken, refreshToken;
     if (userData.isSocial) {
@@ -52,6 +58,12 @@ const createUser = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, v
         };
         accessToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_access_token_secret, config_1.default.jwt_access_token_expiresin);
         refreshToken = healper_jwt_1.default.createToken(payload, config_1.default.jwt_refresh_token_secret, config_1.default.jwt_refresh_token_expiresin);
+    }
+    if (userData.survey) {
+        const survey = yield survey_services_1.default.getSurveyById(userData.survey);
+        // if(!survey){
+        //   throw new CustomError.BadRequestError("Survey not found")
+        // }
     }
     const user = yield user_services_1.default.createUser(userData);
     if (!user) {
@@ -71,6 +83,9 @@ const createUser = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, v
         };
         (0, sendEmail_1.default)(mailOptions);
     }
+    // create invoice for fresh user
+    const invoice = yield invoice_services_1.default.createInvoiceForSingleUser(user._id);
+    console.log(invoice);
     (0, sendResponse_1.default)(res, {
         statusCode: http_status_codes_1.StatusCodes.CREATED,
         status: 'success',
@@ -135,6 +150,10 @@ const updateSpecificUser = (0, asyncHandler_1.default)((req, res) => __awaiter(v
     if (userData.password || userData.email || userData.isEmailVerified) {
         throw new errors_1.default.BadRequestError("You can't update email, verified status and password directly!");
     }
+    // parse shippingAddress
+    if (userData.shippingAddress) {
+        userData.shippingAddress = JSON.parse(userData.shippingAddress);
+    }
     const updatedUser = yield user_services_1.default.updateSpecificUser(id, userData);
     // console.log(updatedUser, updatedProfile)
     if (!(updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.isModified)) {
@@ -189,6 +208,20 @@ const sendEmailToAllUsers = (0, asyncHandler_1.default)((req, res) => __awaiter(
         message: 'Email sent successfully',
     });
 }));
+// controller for update shipping address
+const updateShippingAddress = (0, asyncHandler_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.params;
+    const shippingAddress = req.body;
+    const updatedUser = yield user_services_1.default.updateShippingAddress(id, shippingAddress);
+    if (!(updatedUser === null || updatedUser === void 0 ? void 0 : updatedUser.isModified)) {
+        throw new errors_1.default.BadRequestError('Failed to update shipping address!');
+    }
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.StatusCodes.OK,
+        status: 'success',
+        message: 'Shipping address updated successfully',
+    });
+}));
 exports.default = {
     createUser,
     getSpecificUser,
@@ -198,4 +231,5 @@ exports.default = {
     // changeUserProfileImage,
     sendEmailToSpecificUser,
     sendEmailToAllUsers,
+    updateShippingAddress,
 };

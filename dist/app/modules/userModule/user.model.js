@@ -28,7 +28,6 @@ const userSchema = new mongoose_1.default.Schema({
     },
     phone: {
         type: String,
-        unique: true,
     },
     password: {
         type: String,
@@ -79,6 +78,32 @@ const userSchema = new mongoose_1.default.Schema({
     survey: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'survey',
+    },
+    subscription: {
+        purchaseId: {
+            type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'subscriptionPurchase',
+            default: null,
+        },
+        isActive: {
+            type: Boolean,
+            default: false,
+        },
+    },
+    stripeCustomerId: {
+        type: String,
+        default: null,
+    },
+    stripePaymentMethodId: {
+        type: String,
+        default: null,
+    },
+    shippingAddress: {
+        state: String,
+        street: String,
+        city: String,
+        country: String,
+        zipCode: String,
     },
 }, {
     timestamps: true,

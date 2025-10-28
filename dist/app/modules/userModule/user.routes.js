@@ -25,4 +25,6 @@ userRouter.patch('/update/:id',
 userRouter.post('/send-email/indivisual/:id', (0, requestValidator_1.default)(user_validation_1.default.getSpecificUserZodSchema), user_controllers_1.default.sendEmailToSpecificUser);
 // send email to all users
 userRouter.post('/send-email/bulk', user_controllers_1.default.sendEmailToAllUsers);
+// update shipping address
+userRouter.patch('/update/shipping-address/:id', (0, requestValidator_1.default)(user_validation_1.default.getSpecificUserZodSchema), user_controllers_1.default.updateShippingAddress);
 exports.default = userRouter;

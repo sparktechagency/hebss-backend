@@ -15,12 +15,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const config_1 = __importDefault(require("./config"));
 const app_1 = __importDefault(require("./app"));
+const node_cron_1 = __importDefault(require("node-cron"));
+const invoice_services_1 = __importDefault(require("./app/modules/invoiceModule/invoice.services"));
 let server;
 // handle uncaught exception error
 process.on('uncaughtException', (error) => {
     console.log('uncaughtException error', error);
     process.exit(1);
 });
+node_cron_1.default.schedule('0 0 1 * *', () => __awaiter(void 0, void 0, void 0, function* () {
+    yield invoice_services_1.default.createInvoice();
+    console.log('Invoice created successfully');
+}));
+// cron.schedule('* * * * *', async () => {
+//   await invoiceServices.createInvoice();
+//   console.log('Invoice created successfully');
+// });
 const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connect(config_1.default.mongodb_url);
     console.log('\x1b[36mDatabase connection successfull\x1b[0m');
