@@ -8,6 +8,7 @@ import subscriptionPurchaseServices from '../modules/subscriptionPurchaseModule/
 import { Types } from 'mongoose';
 import sendMail from '../../utils/sendEmail';
 import billingServices from '../modules/billingModule/billing.services';
+import invoiceServices from '../modules/invoiceModule/invoice.services';
 
 const stripe = new Stripe(config.stripe_secret_key as string);
 
@@ -25,6 +26,7 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
   }
 
   const session = event.data.object as Stripe.Checkout.Session;
+  console.log('session', session);
   const customerId = session.customer as string;
 
   const user = await userServices.getSpecificUserByCustomerId(customerId);
@@ -73,6 +75,10 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
         purchaseId: subscriptionPurchase._id as Types.ObjectId,
       };
       await user.save();
+
+      // create invoice if not created
+      const invoice = await invoiceServices.createInvoiceForSingleUser(user._id as string);
+      console.log(invoice)
 
       // create billing
       await billingServices.createBilling({
