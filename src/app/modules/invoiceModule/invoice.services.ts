@@ -41,7 +41,7 @@ class InvoiceService {
 
   async createInvoiceForSingleUser(userId: string) {
     const user = await userServices.getSpecificUser(userId);
-    console.log("user", user)
+    // console.log("user", user)
     if (!user) {
       throw new CustomError.NotFoundError('User not found!');
     }
@@ -49,8 +49,10 @@ class InvoiceService {
     const subscriptionPurchaseByUser = await subscriptionPurchaseServices.getSubscriptionPurchaseByUserId(userId);
     // console.log(subscriptionPurchaseByUser)
     if (subscriptionPurchaseByUser) {
-      const survey = await surveyServices.getSurveyById(user.survey as unknown as ObjectId)
-      const box = await boxServices.getBoxByCategoryId(survey?.category as unknown as ObjectId);
+      // console.log(user.survey._id)
+      const survey = await surveyServices.getSurveyBySurveyId(user.survey._id as unknown as ObjectId)
+      // console.log(survey)
+      const box = await boxServices.getSpecificBoxByCategoryId(survey?.category as unknown as string);
 
       if (box) {
         const lastInvoice = await this.getLastInvoice();
@@ -69,7 +71,36 @@ class InvoiceService {
   }
 
   async getAllInactiveInvoicesByUserId(id: string) {
-    return await Invoice.find({ user: id, isActive: false });
+    return await Invoice.find({ user: id, isActive: false }).populate([
+      {
+        path: 'user',
+        select: 'email phone subscription survey gender role',
+        populate: {
+          path: 'survey',
+          select: '',
+          populate: {
+            path: 'favoriteCollection',
+            select: ''
+          }
+        }
+      },
+      {
+        path: 'box',
+        select: 'books',
+        populate: {
+          path: 'books',
+          select: 'name price coverImage'
+        }
+      },
+      {
+        path: 'soldBooks.bookId',
+        select: 'name price coverImage'
+      },
+      {
+        path: 'extraBooks',
+        select: 'name price coverImage'
+      }
+    ]);
   }
 
   async getActiveInvoiceByUserId(id: string) {
@@ -91,16 +122,16 @@ class InvoiceService {
         select: 'books',
         populate: {
           path: 'books',
-          select: 'name'
+          select: 'name price coverImage'
         }
       },
       {
         path: 'soldBooks.bookId',
-        select: 'name'
+        select: 'name price coverImage'
       },
       {
         path: 'extraBooks',
-        select: 'name'
+        select: 'name price coverImage'
       }
     ]);
   }
@@ -125,6 +156,10 @@ class InvoiceService {
   async getLastInvoice() {
     return await Invoice.findOne().sort({ _id: -1 });
   }
+
+  // async getAllInactiveInvoicesByUserId(id: string) {
+  //   return await Invoice.find({ user: id, isActive: false });
+  // }
 }
 
 export default new InvoiceService();

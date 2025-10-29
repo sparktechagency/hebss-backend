@@ -78,7 +78,7 @@ export const stripeWebhookHandler = asyncHandler(async (req: Request, res: Respo
 
       // create invoice if not created
       const invoice = await invoiceServices.createInvoiceForSingleUser(user._id as string);
-      console.log(invoice)
+      // console.log(invoice)
 
       // create billing
       await billingServices.createBilling({

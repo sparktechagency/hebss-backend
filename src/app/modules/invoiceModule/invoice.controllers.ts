@@ -33,17 +33,18 @@ class InvoiceController {
   //   });
   // });
 
-  getAllInactiveInvoicesByUserId = asyncHandler(async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const invoices = await InvoiceServices.getAllInactiveInvoicesByUserId(id);
+  // createInvoiceForSingleUser = asyncHandler(async (req: Request, res: Response) => {
+  //   const { id } = req.params;
+  //   const invoice = await InvoiceServices.createInvoiceForSingleUser(id);
+  //   console.log(invoice)
 
-    sendResponse(res, {
-      statusCode: StatusCodes.OK,
-      status: 'success',
-      message: 'Invoices retrieved successfully',
-      data: invoices,
-    });
-  });
+  //   sendResponse(res, {
+  //     statusCode: StatusCodes.OK,
+  //     status: 'success',
+  //     message: 'Invoice created successfully',
+  //     data: invoice,
+  //   });
+  // });
 
   getActiveInvoiceByUserId = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -203,6 +204,22 @@ class InvoiceController {
       status: 'success',
       message: 'Invoice payment completed successfully',
       data: invoice,
+    });
+  });
+
+  getAllInactiveInvoicesByUserId = asyncHandler(async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const invoices = await InvoiceServices.getAllInactiveInvoicesByUserId(id);
+
+    if (invoices.length === 0) {
+      throw new CustomError.NotFoundError('Invoice not found!');
+    }
+
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      status: 'success',
+      message: 'Invoice retrieved successfully',
+      data: invoices,
     });
   });
 }

@@ -12,5 +12,6 @@ invoiceRouter.get('/retrieve/history/user/:id', InvoiceController.getAllInactive
 invoiceRouter.get('/current/retrieve/user/:id', InvoiceController.getActiveInvoiceByUserId);
 invoiceRouter.patch('/update/:id', InvoiceController.updateInvoice);
 invoiceRouter.post('/paid/:invoiceId', InvoiceController.getPaidForSpecificInvoice);
+// invoiceRouter.post('/create/user/:id', InvoiceController.createInvoiceForSingleUser);
 
 export default invoiceRouter;

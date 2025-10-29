@@ -12,6 +12,10 @@ class SurveyService {
     return await Survey.findOne({email: id});
   }
 
+  async getSurveyBySurveyId(id: ObjectId) {
+    return await Survey.findOne({_id: id});
+  }
+
   // async getSurveyByUserId(id: string) {
   //   return await Survey.findOne({user: id});
   // }

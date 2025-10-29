@@ -116,10 +116,10 @@ class SubscriptionPurchaseController {
       });
 
       // check the user exist active invoice, if not then create new invoice
-      const invoice = await invoiceServices.getActiveInvoiceByUserId(userId);
-      if (!invoice) {
-        await invoiceServices.createInvoiceForSingleUser(userId);
-      }
+      // const invoice = await invoiceServices.getActiveInvoiceByUserId(userId);
+      // if (!invoice) {
+      //   await invoiceServices.createInvoiceForSingleUser(userId);
+      // }
 
       return sendResponse(res, {
         statusCode: StatusCodes.OK,
