@@ -42,7 +42,7 @@ const orderSchema = new mongoose.Schema<IOrder>({
   paymentInfo: {
     type: { type: String, enum: ['cash', 'card', 'online'], default: 'cash' },
     status: { type: String, enum: ['paid', 'unpaid'], default: 'unpaid' },
-    tnxId: { type: String, required: true },
+    tnxId: { type: String },
   },
   sessionId: { type: String, required: true },
   returnLabelUrl: { type: String},

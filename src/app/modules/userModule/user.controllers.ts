@@ -23,11 +23,12 @@ const createUser = asyncHandler(async (req: Request, res: Response) => {
     code: IdGenerator.generateNumberId(),
     expireDate,
   };
-
+// console.log(userData)
   // parse shippingAddress
-  if (userData.shippingAddress) {
-    userData.shippingAddress = JSON.parse(userData.shippingAddress);
-  }
+//   if (userData.shippingAddress) {
+//     userData.shippingAddress = JSON.parse(userData.shippingAddress);
+//   }
+// console.log("..............", userData)
 
   // token for social user
   let accessToken, refreshToken;

@@ -150,13 +150,14 @@ class OrderController {
 
   createOrder = asyncHandler(async (req: Request, res: Response) => {
     const orderData = req.body;
-
+console.log("stripe", stripe)
     // 1. Retrieve Stripe session
     const session: any = await stripe.checkout.sessions.retrieve(orderData.sessionId, {
       expand: ['line_items', 'payment_intent'],
     });
 
-    console.log("Shipping Address:", session.shipping);
+    console.log("Shipping Address:", session.customer_details);
+    console.log("Session:", session);
 
 
     if (!session || session.payment_status !== 'paid') {
@@ -194,11 +195,11 @@ class OrderController {
         currency: session.currency!,
       },
       shippingAddress: {
-        state: session.shipping?.address?.state || 'N/A, Will come letter',
-        street: session.shipping?.address?.line1 || 'N/A',
-        city: session.shipping?.address?.city || 'N/A',
-        country: session.shipping?.address?.country || 'N/A',
-        zipCode: session.shipping?.address?.postal_code || 'N/A',
+        state: session.customer_details?.address?.state || 'N/A, Will come letter',
+        street: session.customer_details?.address?.line1 || 'N/A',
+        city: session.customer_details?.address?.city || 'N/A',
+        country: session.customer_details?.address?.country || 'N/A',
+        zipCode: session.customer_details?.address?.postal_code || 'N/A',
       },
       paymentInfo: {
         type: 'card',
