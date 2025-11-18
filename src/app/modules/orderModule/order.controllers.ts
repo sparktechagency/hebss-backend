@@ -135,10 +135,6 @@ class OrderController {
     });
   });
 
-
-
-
-
   initiateOrderPayment = asyncHandler(async (req: Request, res: Response) => {
     const { items, shippingCost, customerEmail } = req.body;
     const { purpose } = req.query;
