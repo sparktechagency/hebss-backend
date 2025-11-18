@@ -7,7 +7,6 @@ import { StatusCodes } from 'http-status-codes';
 import { CURRENCY_ENUM } from '../../../enums/currency';
 import Book from '../bookModule/book.model';
 import IdGenerator from '../../../utils/IdGenerator';
-import mongoose from 'mongoose';
 import Stripe from 'stripe';
 import config from '../../../config';
 import billingServices from '../billingModule/billing.services';
@@ -17,64 +16,128 @@ const stripe = new Stripe(config.stripe_secret_key as string);
 const api = new EasyPost(config.easypost_test_api_key as string);
 
 class OrderController {
-  getShippingRates = asyncHandler(async (req: Request, res: Response) => {
-    const { toAddress, parcelDetails } = req.body;
 
+
+  getShippingRates = asyncHandler(async (req: Request, res: Response) => {
+    const { toAddress, parcelDetails, forceAccept } = req.body;
+
+    if (!toAddress || !parcelDetails) {
+      throw new CustomError.BadRequestError('toAddress and parcelDetails are required');
+    }
+
+    /** Helper to remove EasyPost internal fields */
+    const cleanAddress = (addr: any) => {
+      if (!addr) return null;
+      const cleaned = { ...addr };
+      delete cleaned.verifications;
+      delete cleaned._params;
+      delete cleaned.object;
+      delete cleaned.mode;
+      delete cleaned.created_at;
+      delete cleaned.updated_at;
+      delete cleaned.id;
+      return cleaned;
+    };
+
+    /** STEP 1: TRY VERIFYING DESTINATION ADDRESS */
+    let verified: any = null;
+
+    try {
+      verified = await api.Address.create({
+        ...toAddress,
+        verify: ['delivery'],
+      });
+    } catch (err) {
+      verified = null; // Verification failed
+    }
+
+    const isValid =
+      verified?.verifications?.delivery?.success === true;
+
+    /** STEP 2: If verification FAILS and forceAccept is FALSE → return error + suggestion */
+    if (!isValid && !forceAccept) {
+      const suggested = cleanAddress(verified) || toAddress;
+
+      return sendResponse(res, {
+        statusCode: 422,
+        status: 'address_verification_failed',
+        message: 'We could not verify this address. Please review or confirm.',
+        data: {
+          originalAddress: toAddress,
+          suggestedAddress: suggested,
+          errors: verified?.verifications?.delivery?.errors || [],
+        },
+      });
+    }
+
+    /** STEP 3: Use verified address OR original address if forced */
+    const finalToAddress = cleanAddress(isValid ? verified : toAddress);
+
+    /** FIXED FROM ADDRESS (USPS-approved) */
     const fromAddress = {
       company: 'Illuminate Muslim Minds',
-      street1: '789 Market St',
+      street1: '1 Market St',
       city: 'San Francisco',
       state: 'CA',
-      zip: '94103',
+      zip: '94105',
       country: 'US',
     };
 
+    /** STEP 4: CREATE SHIPMENT (NO MORE VERIFICATION) */
     const shipment = await api.Shipment.create({
-      to_address: toAddress,
+      to_address: finalToAddress,
       from_address: fromAddress,
       parcel: parcelDetails,
       options: {
         carrier_accounts: [config.usps_return_carrier_id],
         is_return: true,
+        verify: false, // Prevent re-verification
       },
     });
 
-    // Fallback if no rates found
-    if (!shipment.rates || shipment.rates.length === 0) {
-      throw new CustomError.BadRequestError('No rates found for the return shipment');
+    if (!shipment.rates?.length) {
+      throw new CustomError.BadRequestError('No USPS rates available');
     }
 
-    const returnRate = shipment.lowestRate(['USPS']);
-    const boughtShipment = await api.Shipment.buy(shipment.id, returnRate);
+    /** STEP 5: BUY LOWEST USPS RATE */
+    const rate = shipment.lowestRate(['USPS']);
+    const bought = await api.Shipment.buy(shipment.id, rate);
 
-    const returnLabelUrl = boughtShipment.postage_label?.label_url;
-    const returnTrackingCode = boughtShipment.tracking_code;
-    const tracker = await api.Tracker.retrieve(boughtShipment.tracker.id);
+    const returnLabelUrl = bought.postage_label?.label_url;
+    const trackingCode = bought.tracking_code;
+
+    const tracker = await api.Tracker.retrieve(bought.tracker.id);
+
     const trackingUrl = tracker.public_url;
 
-    const rates = boughtShipment.rates
-      .filter((rate) => rate.carrier === 'USPS')
-      .map((rate) => ({
-        id: rate.id,
-        carrier: rate.carrier,
-        service: rate.service,
-        rate: rate.rate,
-        deliveryDays: rate.delivery_days,
-        currency: rate.currency,
+    const rates = bought.rates
+      .filter((r) => r.carrier === 'USPS')
+      .map((r) => ({
+        id: r.id,
+        carrier: r.carrier,
+        service: r.service,
+        rate: r.rate,
+        deliveryDays: r.delivery_days,
+        currency: r.currency,
       }));
 
-    sendResponse(res, {
+    /** SUCCESS */
+    return sendResponse(res, {
       statusCode: StatusCodes.OK,
       status: 'success',
-      message: 'Return shipping label purchased and rates retrieved',
+      message: 'Shipping rates retrieved & label created',
       data: {
         rates,
         returnLabelUrl,
-        returnTrackingCode,
+        trackingCode,
         trackingUrl,
       },
     });
   });
+
+
+
+
 
   initiateOrderPayment = asyncHandler(async (req: Request, res: Response) => {
     const { items, shippingCost, customerEmail } = req.body;
@@ -134,7 +197,7 @@ class OrderController {
       mode: 'payment',
       customer_email: customerEmail,
       shipping_address_collection: {
-        allowed_countries: ['US','BD'], // collect shipping address
+        allowed_countries: ['US', 'BD'], // collect shipping address
       },
       success_url: `${config.frontend_url}/success?session_id={CHECKOUT_SESSION_ID}&purpose=${purpose}`,
       cancel_url: `${config.frontend_url}/cancel`,
@@ -150,7 +213,7 @@ class OrderController {
 
   createOrder = asyncHandler(async (req: Request, res: Response) => {
     const orderData = req.body;
-console.log("stripe", stripe)
+    console.log("stripe", stripe)
     // 1. Retrieve Stripe session
     const session: any = await stripe.checkout.sessions.retrieve(orderData.sessionId, {
       expand: ['line_items', 'payment_intent'],
